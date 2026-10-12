@@ -147,6 +147,8 @@ The studio is layered around the 3D scene. A first desktop visit starts with
 both drawers closed, leaving the full window to the canvas; a compact 48-pixel
 top bar, scene title and camera toolbar float over it. **Library** and **Edit**
 open or close the two edge drawers, and the choice is remembered.
+Open drawers are square, flush with the window edges and extend from the header
+to the bottom of the available area; catalog rows have no outer rounding or gutter.
 The header and scene information use a quiet translucent backing so text stays
 readable against dark or detailed settings.
 **Edit posture** or a new study opens the editor. **Display** unfolds the
@@ -160,6 +162,12 @@ and bundled **Manrope** typography with system Chinese sans-serif fallbacks:
 13-pixel body text, 14-pixel section headings and 18-pixel scene titles, with
 500/600/700 weights. Dropdowns and primary touch controls retain at least
 40-pixel height.
+The camera dock and compact header/library actions use consistent line icons
+with their original accessible names. Custom hints replace native browser
+tooltips throughout static and dynamically generated UI: hover or keyboard focus
+shows a hint, Escape dismisses it, and a half-second touch hold shows it without
+activating the action. Normal taps and scrolling are unchanged. Hints remain
+hoverable, fit the viewport, follow live label updates and work inside dialogs.
 All dropdowns use the same custom menu, including dynamic figure/contact
 controls and export dialogs. Arrow keys, Home/End and typeahead highlight a
 choice; Enter or Space commits it, while Escape, Tab or clicking outside

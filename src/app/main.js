@@ -18,6 +18,8 @@ import { createCameraTour } from "./cameraTour.js";
 import { createCameraMotion } from "./cameraMotion.js";
 import { bindWorkspaceLayout } from "./workspaceLayout.js";
 import { bindCustomSelects } from "./customSelect.js";
+import { bindIcons } from "./icons.js";
+import { bindCustomHints } from "./customHints.js";
 import { createPositionClient } from "./positionClient.js";
 import {
   isPositionOverride,
@@ -44,6 +46,8 @@ import {
 const $ = (id) => document.getElementById(id);
 const clone = (value) => JSON.parse(JSON.stringify(value));
 localizeDocument();
+const removeIcons = bindIcons();
+const removeCustomHints = bindCustomHints();
 const removeCustomSelects = bindCustomSelects();
 // The switch names the language it switches to, in that language.
 $("language").textContent = language === "zh" ? "EN" : "中文";
@@ -898,6 +902,8 @@ window.addEventListener("pagehide", (event) => {
     removeCameraInput();
     workspace.dispose();
     removeCustomSelects();
+    removeIcons();
+    removeCustomHints();
     studio.dispose();
     library.close();
     worker.terminate();

@@ -8,6 +8,17 @@ Manrope follows the 11/12/13/14/18-pixel text scale documented in the README.
 The header and scene HUD have translucent backings for legibility in dark rooms.
 Both desktop drawers start closed on a first visit; existing layout choices
 remain respected. **Display** folds setting/material controls above the dock.
+Open desktop panels meet the window edges, starting at y=48 and ending at the
+viewport bottom. Catalog rows are square and full-width; panel/list/footer
+bottom insets are zero. Mobile panels fill the region between header and navigation.
+
+`custom-hints.spec.js` checks exact panel bounds at 1080/1440/1600 pixels,
+icon-dock bounds and 40-pixel touch targets at 320/390/481/520/844 pixels,
+hover transfer, focus/Escape, disabled actions, live title migration,
+preservation of existing descriptions, modal hints, custom-menu coexistence,
+Chinese labels and Axe. Real Chrome touch events verify that a long press
+shows a hint without changing the camera view while a normal tap still changes it.
+Native touch swipes also scroll the catalog without loading a card or opening a hint.
 
 `custom-select.spec.js` covers the shared custom menu with real pointer/touch
 and keyboard interactions, including arrows, Home/End, PageDown, F4, typeahead,
@@ -29,7 +40,13 @@ This changes UI presentation and disclosure, not the scene contract, renderer,
 solver, model assets or browser-storage format. Chrome automation and Axe are
 not a physical-device or assistive-technology certification.
 
-**Verification:** 24 focused Node checks and 25 unique browser scenarios passed
+**Edge-panel/icon follow-up:** 14 focused Node checks and 20 unique browser
+scenarios passed across the layout/localization regression batch and focused
+reruns. The final hint/menu/camera-gesture batch passed 11/11. Initial checks
+caught short-landscape-only icon styling and modal focus/toggle ordering; both
+were corrected and rerun. Desktop and narrow-phone screenshots were inspected.
+
+**Previous scene-first iteration:** 24 focused Node checks and 25 unique browser scenarios passed
 across the regression batch and focused reruns. The final HUD/lifecycle batch
 passed 10/10 scenarios; the final menu/global-shortcut checks passed 2/2.
 Desktop/mobile screenshots were inspected after waiting for layout redraws.

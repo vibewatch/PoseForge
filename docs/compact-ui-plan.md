@@ -8,6 +8,8 @@
 > follows 4/8/12 pixels, and typography follows the scale documented in the
 > [README](../README.md). A shared custom-select enhancement retains native
 > values and labels while rendering keyboard-accessible top-layer menus.
+> Open panels now meet the window edges without rounded corners or bottom gaps.
+> The dock uses accessible line icons and shared custom hover/focus/long-press hints.
 > The rest of this plan is kept as historical evidence.
 
 ## Intent

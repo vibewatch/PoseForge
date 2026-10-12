@@ -107,6 +107,8 @@ src/app/
   contactEditor.js figure/landmark contact editing and measured feedback
   studioUI.js      library, filters, dialogs and export choices
   customSelect.js  shared top-layer choice menus; native labels/values stay bound
+  icons.js         consistent decorative SVGs; action names and handlers stay bound
+  customHints.js   shared hover/focus/touch hints; migrates live native titles
   workspaceLayout.js remembered drawers, mobile regions and Display disclosure
   libraryStore.js  atomic browser persistence for saved presets/favorites
   diagram.js       schematic joint previews

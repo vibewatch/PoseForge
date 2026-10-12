@@ -157,7 +157,7 @@ test("display disclosure and custom menus fit touch screens and localized text",
   }
   await page.goto("/?preset=builtin.standing-female&lang=zh");
   await expect(page.locator("#status")).toContainText("就绪", { timeout: 60_000 });
-  await page.getByText("显示", { exact: true }).click();
+  await page.locator(".display-options > summary").click();
   const setting = page.getByLabel("布景", { exact: true });
   await setting.click();
   await page.getByRole("listbox", { name: "布景的选项", exact: true })

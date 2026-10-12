@@ -49,7 +49,7 @@ export function setLanguage(next) {
   location.replace(url);
 }
 
-const ATTRIBUTES = ["aria-label", "title", "placeholder"];
+const ATTRIBUTES = ["aria-label", "title", "data-hint", "placeholder"];
 const words = (text) => text.replace(/\s+/g, " ").trim();
 
 /** The page's own markup: every text and label the dictionary knows. */

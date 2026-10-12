@@ -23,20 +23,20 @@ test("the studio switches to Chinese and back, and keeps the choice and the scen
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
   const toggle = page.locator("#language");
   await expect(toggle).toHaveText("中文");
-  await expect(toggle).toHaveAttribute("title", "Switch to Chinese");
+  await expect(toggle).toHaveAttribute("data-hint", "Switch to Chinese");
   await expect(page.locator("#scene-title")).toHaveText("Kneeling Missionary");
 
   await toggle.click();
   await ready(page, "就绪");
   await expect(page.locator("html")).toHaveAttribute("lang", "zh-CN");
   await expect(toggle).toHaveText("EN");
-  await expect(toggle).toHaveAttribute("title", "切换到英文");
+  await expect(toggle).toHaveAttribute("data-hint", "切换到英文");
   expect(await page.evaluate(() => localStorage.getItem("poseforge.language.v1"))).toBe("zh");
   // The position that was open is open again, now in Chinese.
   await expect(page.locator("#scene-title")).toHaveText("跪姿传教士");
   await expect(page.locator("#scene-description")).toContainText("跪于双腿之间");
   await expect(page).toHaveTitle("PoseForge — 你的姿势工作室");
-  await expect(page.locator("#save-preset")).toHaveText(/保存预设/);
+  await expect(page.locator("#save-preset")).toHaveAccessibleName("保存预设");
   await expect(page.getByRole("button", { name: "场景", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "人物", exact: true })).toBeVisible();
 
@@ -69,7 +69,7 @@ test("the studio switches to Chinese and back, and keeps the choice and the scen
   await ready(page, "Ready");
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
   await expect(page.locator("#language")).toHaveText("中文");
-  await expect(page.locator("#save-preset")).toHaveText(/Save preset/);
+  await expect(page.locator("#save-preset")).toHaveAccessibleName("Save preset");
 });
 
 test("a link can name the language", async ({ page }) => {

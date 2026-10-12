@@ -519,7 +519,7 @@ small {
   overflow-y: auto;
   flex: 1;
   min-height: 0;
-  padding: 0 var(--space-1) var(--space-1);
+  padding: 0;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-content: start;
@@ -529,7 +529,7 @@ small {
 /* Rows stay quiet until they are hovered, focused or chosen. */
 .preset-card {
   position: relative;
-  border-radius: var(--radius);
+  border-radius: 0;
   min-width: 0;
   transition: background 0.15s;
 }
@@ -543,10 +543,10 @@ small {
   display: grid;
   grid-template-columns: 48px minmax(0, 1fr);
   align-items: center;
-  padding: 4px;
+  padding: 4px var(--space-2);
   width: 100%;
   border: 0;
-  border-radius: var(--radius);
+  border-radius: 0;
   text-align: left;
   background: transparent;
   height: 100%;
@@ -735,7 +735,7 @@ small {
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: var(--space-1) var(--space-2);
+  padding: 0 var(--space-2);
   flex-shrink: 0;
   margin-top: auto;
 }
@@ -1076,7 +1076,7 @@ small {
   background: var(--surface);
   overflow-y: auto;
   min-height: 0;
-  padding: 0 var(--space-2) var(--space-2);
+  padding: 0 var(--space-2);
   scrollbar-width: thin;
   scroll-padding-top: 56px;
 }
@@ -1314,7 +1314,7 @@ input[type="checkbox"] {
 }
 .actor-card {
   border: 0;
-  border-radius: var(--radius);
+  border-radius: 0;
   padding: var(--space-2);
   margin-bottom: var(--space-2);
   background: #f8f8fa;
@@ -1333,7 +1333,7 @@ input[type="checkbox"] {
   margin: var(--space-2) 0;
   padding: var(--space-2);
   border: 0;
-  border-radius: var(--radius);
+  border-radius: 0;
   background: #f8f8fa;
 }
 .contact-card legend {
@@ -1676,29 +1676,26 @@ dialog .buttons {
     margin-bottom: 8px;
   }
 }
-/* Desktop drawers are floating cards beside the scene; closing one gives its
-   width back to the canvas. */
+/* Edge panels meet the header and window; closing one returns its width to the scene. */
 @media (min-width: 901px) {
   #library,
   #panel {
     grid-row: 1;
     position: relative;
     z-index: 4;
-    margin: 48px 0 8px;
+    margin: 48px 0 0;
     border: 0;
-    border-radius: 10px;
-    box-shadow: var(--float-shadow);
+    border-radius: 0;
+    box-shadow: none;
   }
   #library {
     grid-column: 1;
     width: 272px;
-    margin-left: 8px;
     overflow: hidden;
   }
   #panel {
     grid-column: 3;
     width: 304px;
-    margin-right: 8px;
   }
   #app[data-library="closed"] #library,
   #app[data-inspector="closed"] #panel {
@@ -1841,7 +1838,7 @@ dialog .buttons {
     background: var(--soft);
   }
   #panel {
-    padding: 0 var(--space-2) var(--space-2);
+    padding: 0 var(--space-2);
     overflow: auto;
     scroll-padding-top: 124px;
   }
@@ -1852,7 +1849,7 @@ dialog .buttons {
     font-size: var(--text-heading);
   }
   .catalog-list {
-    padding: 0 var(--space-1) var(--space-1);
+    padding: 0;
   }
   .preset-name {
     font-size: var(--text-body);
@@ -1875,7 +1872,7 @@ dialog .buttons {
     right: 2px;
   }
   .library-bottom {
-    padding: var(--space-1) var(--space-2);
+    padding: 0 var(--space-2);
   }
   .toast {
     bottom: calc(62px + env(safe-area-inset-bottom));
@@ -1961,5 +1958,77 @@ dialog .buttons {
   }
   .stage-heading h1 {
     font-size: 17px;
+  }
+}
+.ui-icon {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+.ui-icon .icon-face {
+  fill: currentColor;
+  fill-opacity: 0.2;
+  stroke: none;
+}
+.icon-control,
+.stage-toolbar .icon-control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  min-height: 32px;
+  padding: 0;
+  flex-shrink: 0;
+}
+.display-options > summary.icon-control::before {
+  display: none;
+}
+.custom-hint {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  border: 0;
+  border-radius: 6px;
+  padding: 6px 8px;
+  max-width: min(300px, calc(100vw - 16px));
+  max-height: calc(100dvh - 16px);
+  overflow: auto;
+  overflow-wrap: anywhere;
+  background: #262631;
+  color: #fff;
+  font-family: inherit;
+  font-size: var(--text-caption);
+  font-weight: 500;
+  line-height: 1.5;
+  box-shadow: 0 3px 12px #0002;
+  pointer-events: auto;
+  z-index: 100;
+}
+@media (pointer: coarse), (max-width: 900px) {
+  .icon-control,
+  .stage-toolbar .icon-control {
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    min-height: 40px;
+  }
+}
+@media (max-width: 900px) {
+  .topbar .drawer-toggle {
+    display: none;
+  }
+}
+@container stage (min-width: 481px) and (max-width: 520px) {
+  .stage-toolbar {
+    gap: 0;
+  }
+  .stage-toolbar .view-buttons,
+  .stage-toolbar .tour-control,
+  .stage-toolbar .zoom-controls {
+    gap: 0;
+    margin-left: 0;
+    padding-left: 0;
   }
 }
