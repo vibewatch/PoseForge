@@ -553,16 +553,27 @@ small {
   border-top: 0;
 }
 .position-category > summary {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 6px minmax(0, 1fr) auto;
+  align-items: center;
   gap: 8px;
   padding: 7px 2px;
   color: var(--ink);
   font-weight: 600;
+  text-align: left;
+}
+.position-category > summary::before {
+  margin: 0;
+}
+.position-category > summary span {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .position-category > summary small {
   color: var(--muted);
   font-weight: 500;
+  white-space: nowrap;
+  text-align: right;
 }
 .position-types {
   display: flex;
@@ -571,16 +582,20 @@ small {
   padding: 0 0 8px;
 }
 .position-type {
-  border: 0;
+  border: 1px solid #d0cddd;
   border-radius: 6px;
-  background: transparent;
+  background: var(--surface);
   color: #4e4b68;
   padding: 4px 6px;
   min-height: 27px;
+  max-width: 100%;
   font-size: var(--text-caption);
   text-align: left;
+  overflow-wrap: anywhere;
 }
-.position-type:hover {
+.position-type:not(:disabled):hover,
+.position-type:focus-visible {
+  border-color: var(--accent);
   background: var(--soft);
   color: var(--accent-strong);
 }

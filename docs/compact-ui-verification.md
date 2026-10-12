@@ -12,6 +12,12 @@ Open desktop panels meet the window edges, starting at y=48 and ending at the
 viewport bottom. Catalog rows are square and full-width; panel/list/footer
 bottom insets are zero. Mobile panels fill the region between header and navigation.
 
+Category disclosures use a fixed chevron column, left-aligned names and
+right-aligned counts. Expanded position tags have a fine border, white backing
+and accented hover/keyboard-focus states. `panel-design.spec.js` checks their
+alignment, visible boundaries, narrow-screen fit and keyboard filtering at
+1440-, 390- and 320-pixel widths without changing the active scene.
+
 `custom-hints.spec.js` checks exact panel bounds at 1080/1440/1600 pixels,
 icon-dock bounds and 40-pixel touch targets at 320/390/481/520/844 pixels,
 hover transfer, focus/Escape, disabled actions, live title migration,
