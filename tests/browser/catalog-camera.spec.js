@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import AxeBuilder from "@axe-core/playwright";
 import { NAMED_PRESETS, serializeCatalog } from "../../src/core/catalog.js";
 
-import { ready } from "./helpers/ready.js";
+import { ready, openSceneInformation } from "./helpers/ready.js";
 const pixels = async (page) =>
   createHash("sha256")
     .update(
@@ -141,6 +141,7 @@ test("every existing named definition loads and renders; known quality notes are
     })
     .click();
   await ready(page);
+  await openSceneInformation(page);
   await expect(page.locator("#show-notes")).toBeVisible();
   await page.locator("#show-notes").click();
   await expect(page.locator(".contact-result.warning").first()).toBeFocused();

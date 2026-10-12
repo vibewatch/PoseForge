@@ -8,7 +8,7 @@ import {
 } from "../../src/core/interactionStudies.js";
 import { serializeCatalog } from "../../src/core/catalog.js";
 import { positionOverrideId } from "../../src/core/positionOverrides.js";
-import { ready } from "./helpers/ready.js";
+import { ready, openSceneInformation } from "./helpers/ready.js";
 
 const entries = JSON.parse(
   readFileSync(
@@ -45,11 +45,13 @@ test.afterEach(() => expect(errors).toEqual([]));
 async function start(page, entry = solo) {
   await page.goto(`/?preset=builtin.position.${entry.sourceId}`);
   await ready(page);
+  await openSceneInformation(page);
   await expect(page.locator("#scene-title")).toHaveText(
     studies.get(entry.sourceId).title,
   );
 }
 async function saveStudy(page, title, replace = false) {
+  await openSceneInformation(page);
   await page
     .getByRole("button", { name: "Save position override", exact: true })
     .click();
@@ -138,6 +140,7 @@ test("a position has an independently edited, captured and replace-confirmed ove
     "My independent posture",
   );
   await ready(page);
+  await openSceneInformation(page);
   await page
     .getByRole("button", { name: "Save position override", exact: true })
     .click();

@@ -612,6 +612,7 @@ function workerFailure(reason) {
   $("show-notes").hidden = false;
   $("panel").setAttribute("aria-busy", "false");
   status(t("This pose could not be rendered. Choose a preset to try again."));
+  $("scene-information").open = true;
   panel.setNotes([{ level: "error", message: text }]);
   toast(text);
 }

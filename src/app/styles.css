@@ -908,13 +908,16 @@ small {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 2px;
+  gap: 0;
   padding: 6px;
   border-radius: var(--radius);
   background: var(--glass);
   backdrop-filter: blur(12px);
 }
 .stage-heading {
+  display: flex;
+  align-items: center;
+  min-height: 32px;
   min-width: 0;
   max-width: 100%;
   padding-right: 38px;
@@ -939,8 +942,9 @@ small {
   display: block;
   overflow: hidden;
 }
-.stage-heading .badge {
+.scene-information-body .badge {
   display: inline-flex;
+  align-self: flex-start;
 }
 .scene-information {
   width: 100%;
@@ -962,9 +966,12 @@ small {
   color: var(--accent-strong);
 }
 .scene-information-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   max-height: min(180px, 30dvh);
   overflow-y: auto;
-  padding-top: 4px;
+  padding-top: 6px;
   overscroll-behavior: contain;
 }
 .scene-information-body p {
@@ -974,7 +981,7 @@ small {
   font-size: var(--text-control);
 }
 .scene-information-body .source-note {
-  margin-top: 4px;
+  margin-top: 0;
   font-size: var(--text-caption);
   color: var(--muted);
 }
@@ -1135,7 +1142,6 @@ small {
   font-size: var(--text-caption);
   color: #5f6360;
   pointer-events: auto;
-  padding-right: 38px;
 }
 #status {
   line-height: 1.5;
@@ -2091,7 +2097,7 @@ dialog .buttons {
     top: 12px;
     right: auto;
     max-width: calc(100% - 24px);
-    gap: 2px;
+    gap: 0;
   }
   .stage-bottom {
     bottom: var(--space-2);
@@ -2108,8 +2114,8 @@ dialog .buttons {
     height: 40px;
     min-height: 40px;
   }
-  .stage-heading,
-  .stage-status {
+  .stage-heading {
+    min-height: 40px;
     padding-right: 46px;
   }
   .mobile-nav {

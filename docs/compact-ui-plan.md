@@ -50,10 +50,11 @@ search input dismiss them.
 
 Custom-select headings have an opaque backing flush with the scroll viewport's
 top edge, including during wheel and keyboard scrolling. The scene HUD keeps a
-compact, single-line title, quality badge and live status. Its information icon
-reveals description/source details inline; Escape closes the disclosure.
-Source authoring actions and Pose checks remain available while details are
-collapsed, and the information control retains a 40-pixel mobile target.
+single-line pose name and an information icon. Type/quality, live status,
+description/source details, source authoring actions and Pose checks appear
+only when that icon expands the inline disclosure; Escape closes it.
+Rendering failures expand their recovery information automatically. The
+information control retains a 40-pixel mobile target.
 
 ## Intent
 

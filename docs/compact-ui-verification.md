@@ -20,9 +20,11 @@ alignment, visible boundaries, narrow-screen fit and keyboard filtering at
 
 The custom-menu regression also checks that sticky headings meet the menu's
 top edge during keyboard/wheel scrolling and own hit-testing in that former
-gap. Scene-information coverage requires a collapsed HUD no taller than
-60 pixels at desktop, narrow-phone and short-landscape sizes, checks keyboard
-disclosure/Escape, visible status/quality feedback, and source details/actions.
+gap. Scene-information coverage requires a name-only collapsed HUD measuring
+44 pixels on desktop and 52 pixels on mobile, checks keyboard
+disclosure/Escape, and reveals status/quality feedback and source details/actions
+only in the expanded information area. Rendering failures automatically open
+their recovery information.
 
 `custom-hints.spec.js` checks exact panel bounds at 1080/1440/1600 pixels,
 icon-dock bounds and 40-pixel touch targets at 320/390/481/520/844 pixels,

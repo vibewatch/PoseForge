@@ -1,4 +1,4 @@
-import { ready } from "./helpers/ready.js";
+import { ready, openSceneInformation } from "./helpers/ready.js";
 import { openLibraryFilters } from "./helpers/library.js";
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
@@ -66,6 +66,7 @@ test("unread description text remains visible as a warning through the worker an
     .click();
   await ready(page);
   await expect(page.locator(".notes")).toContainText("flibbertigibbet");
+  await openSceneInformation(page);
   await expect(page.locator("#show-notes")).toBeVisible();
   await page.locator("#show-notes").click();
   await expect(page.locator(".notes")).toBeVisible();

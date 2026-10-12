@@ -9,3 +9,9 @@ export async function ready(page) {
   });
   await expect(page.locator("#save-preset")).toBeEnabled();
 }
+
+export async function openSceneInformation(page) {
+  const information = page.locator("#scene-information");
+  if (!(await information.evaluate((node) => node.open)))
+    await page.locator("#scene-information-toggle").click();
+}

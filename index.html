@@ -99,34 +99,34 @@
           <div class="stage-heading">
             <div class="scene-line">
               <h1 id="scene-title">Side by side</h1>
-              <span id="scene-badge" class="badge">Built-in study</span>
             </div>
-          </div>
-          <div class="stage-status">
-            <span id="status" role="status" aria-live="polite"
-              >Loading studio</span
-            ><button id="show-notes" class="text-button" hidden>
-              Pose checks
-            </button>
           </div>
           <details id="scene-information" class="scene-information">
             <summary id="scene-information-toggle" role="button" title="Scene information">
               Scene information
             </summary>
             <div class="scene-information-body">
+              <span id="scene-badge" class="badge">Built-in study</span>
+              <div class="stage-status">
+                <span id="status" role="status" aria-live="polite"
+                  >Loading studio</span
+                ><button id="show-notes" class="text-button" hidden>
+                  Pose checks
+                </button>
+              </div>
               <p id="scene-description">
                 A little inspiration. Endless possibilities.
               </p>
+              <div id="position-actions" class="buttons position-actions" hidden>
+                <button id="position-edit" class="action small">
+                  Edit posture
+                </button>
+                <button id="position-save" class="action small" disabled>
+                  Save position override
+                </button>
+              </div>
             </div>
           </details>
-          <div id="position-actions" class="buttons position-actions" hidden>
-            <button id="position-edit" class="action small">
-              Edit posture
-            </button>
-            <button id="position-save" class="action small" disabled>
-              Save position override
-            </button>
-          </div>
         </div>
         <div class="stage-overlay stage-bottom">
           <span class="camera-hint"

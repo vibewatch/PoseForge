@@ -151,7 +151,7 @@ test("category names align left and expanded position tags have visible interact
   }
 });
 
-test("scene information stays compact and reveals full details without hiding status or actions", async ({ page }, info) => {
+test("scene HUD shows only the name and information icon until details are expanded", async ({ page }, info) => {
   const information = page.locator("#scene-information");
   const toggle = page.getByRole("button", { name: "Scene information", exact: true });
   for (const [width, height] of [[1440, 1000], [390, 844], [320, 700], [844, 390]]) {
@@ -159,11 +159,14 @@ test("scene information stays compact and reveals full details without hiding st
     if (width <= 900) await page.locator('[data-region="studio"]').click();
     await expect(information).not.toHaveAttribute("open", "");
     await expect(page.locator("#scene-title")).toBeVisible();
-    await expect(page.locator("#scene-badge")).toBeVisible();
+    await expect(page.locator("#scene-badge")).toBeHidden();
+    await expect(page.locator("#status")).toBeHidden();
+    await expect(page.locator("#position-actions")).toBeHidden();
     await expect(page.locator("#status")).toContainText("Ready");
     await expect(page.locator("#scene-description")).toBeHidden();
     const compact = await page.locator(".stage-top").boundingBox();
-    expect(compact.height).toBeLessThanOrEqual(60);
+    expect(compact.height).toBe(width <= 900 ? 52 : 44);
+    expect((await page.locator(".stage-top").innerText()).trim()).toBe("Standing · female");
     const button = await toggle.boundingBox();
     expect(button.x + button.width).toBeLessThanOrEqual(compact.x + compact.width);
     expect(button.y + button.height).toBeLessThanOrEqual(compact.y + compact.height);
@@ -177,6 +180,7 @@ test("scene information stays compact and reveals full details without hiding st
     await expect(page.locator("#scene-description")).toBeVisible();
     await expect(page.getByRole("dialog")).toHaveCount(0);
     await expect(page.locator("#status")).toBeVisible();
+    await expect(page.locator("#scene-badge")).toBeVisible();
     await audit(page);
     await screenshot(page, info, `expanded-scene-information-${width}.png`);
     await toggle.focus();
@@ -193,15 +197,37 @@ test("scene information stays compact and reveals full details without hiding st
   await page.getByLabel("Search positions", { exact: true }).fill("kneeling-missionary");
   await page.getByRole("button", { name: "Position details kneeling-missionary", exact: true }).click();
   await page.getByRole("button", { name: "Associate current study with this source", exact: true }).click();
-  await expect(page.locator("#position-actions")).toBeVisible();
-  await expect(page.getByRole("button", { name: "Edit posture", exact: true })).toBeVisible();
+  await expect(page.locator("#position-actions")).toBeHidden();
   await expect(page.locator("#scene-source")).toBeHidden();
   await toggle.click();
+  await expect(page.locator("#position-actions")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Edit posture", exact: true })).toBeVisible();
   await expect(page.locator("#scene-source")).toContainText("not a verified reconstruction");
   await expect(page.locator("#scene-source")).toBeVisible();
   await page.getByRole("button", { name: "Edit posture", exact: true }).click();
   await expect(page.getByRole("button", { name: "Figures", exact: true })).toHaveAttribute("aria-pressed", "true");
   await audit(page);
+  await page.addInitScript(() => {
+    const OriginalWorker = window.Worker;
+    window.Worker = class extends OriginalWorker {
+      constructor(...args) {
+        super(...args);
+        (window.__testWorkers ??= []).push(this);
+      }
+    };
+  });
+  await page.reload();
+  await ready(page);
+  await expect(information).not.toHaveAttribute("open", "");
+  await page.evaluate(() => {
+    const worker = window.__testWorkers.find((item) => typeof item.onerror === "function");
+    worker.dispatchEvent(new ErrorEvent("error", { message: "Test rendering failure" }));
+  });
+  await expect(information).toHaveAttribute("open", "");
+  await expect(page.locator("#status")).toBeVisible();
+  await expect(page.locator("#status")).toContainText("This pose could not be rendered");
+  await expect(page.locator("#show-notes")).toBeVisible();
+  await expect(page.locator("#toast")).toContainText("Test rendering failure");
 });
 
 test("panel components share a visual hierarchy while disclosures and figure controls retain their behavior", async ({ page }, info) => {

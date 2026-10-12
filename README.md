@@ -151,9 +151,10 @@ Open drawers are square, flush with the window edges and extend from the header
 to the bottom of the available area; catalog rows have no outer rounding or gutter.
 The header and scene information use a quiet translucent backing so text stays
 readable against dark or detailed settings.
-The scene HUD keeps its title, quality badge and live status compact; its
-information icon expands the description and source inline, and Escape
-collapses them. Pose checks and source-editing actions remain available.
+The scene HUD shows only the pose name and an information icon. The icon
+expands type/quality, live status, description, source and editing/check
+actions inline; Escape collapses them. Rendering failures reveal their status
+and recovery actions automatically rather than hiding an error.
 **Edit posture** or a new study opens the editor. **Display** unfolds the
 setting and material controls above the camera toolbar; Escape or clicking
 outside closes it. Smaller screens keep **Library / Studio / Edit** one tap
