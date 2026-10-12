@@ -178,8 +178,12 @@ default contacts. **A helping hand** is a working example you can edit and save.
 [catalog-scale verification](docs/catalog-scale-verification.md) ·
 [importable example](examples/reference-study.json).
 
-The studio is live at <https://huangyingting.github.io/PoseForge/>; every push
+The studio is live at <https://pose.genisisiq.com/> from
+[`vibewatch/PoseForge`](https://github.com/vibewatch/PoseForge); every push
 to `main` rebuilds and republishes it (`.github/workflows/pages.yml`).
+GitHub Pages uses the custom domain `pose.genisisiq.com`, whose DNS CNAME
+points to `vibewatch.github.io`. Keep the Pages custom-domain setting and
+`public/CNAME` aligned when changing the domain.
 
 Use Node 24 (verified here with Node 24.17.0 and npm 11.13.0).
 
