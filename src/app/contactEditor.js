@@ -105,6 +105,7 @@ export function createContactEditor(onChange) {
     className: "action full",
     textContent: t("+ Add contact"),
   });
+  add.dataset.icon = "contact";
   const root = node(
     "section",
     { className: "contact-editor", id: "contact-editor" },
@@ -197,6 +198,7 @@ export function createContactEditor(onChange) {
         textContent: t("Remove contact"),
       });
       remove.setAttribute("aria-label", t("Remove contact {number}", { number: index + 1 }));
+      remove.dataset.icon = "trash";
       remove.onclick = () => {
         update((next) => next.contacts.splice(index, 1));
         (

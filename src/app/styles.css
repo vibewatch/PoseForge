@@ -308,7 +308,7 @@ small {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 7px;
+  gap: var(--space-2);
   margin: 0 0 var(--space-2);
 }
 .library-title h2 {
@@ -356,9 +356,7 @@ small {
   flex-shrink: 0;
 }
 .filter-toggle::before {
-  content: "⌄";
-  display: inline-block;
-  margin-right: 5px;
+  content: none;
 }
 .filter-toggle[aria-expanded="true"] {
   background: var(--soft);
@@ -404,12 +402,16 @@ small {
   position: relative;
 }
 .search-box:before {
-  content: "⌕";
+  content: none;
+}
+.search-box > .ui-icon {
   position: absolute;
-  top: 2px;
+  top: calc(50% - 8px);
   left: 8px;
-  font-size: 23px;
+  width: 16px;
+  height: 16px;
   color: var(--muted);
+  pointer-events: none;
 }
 .search-box input {
   padding-left: 28px !important;
@@ -420,8 +422,8 @@ small {
   flex-wrap: wrap;
   gap: 2px;
   margin-top: var(--space-1);
-  padding: 2px;
-  background: transparent;
+  padding: 2px 42px 2px 2px;
+  background: var(--surface-muted);
   border-radius: var(--radius);
 }
 .library-scopes button {
@@ -437,11 +439,11 @@ small {
 }
 .library-scopes button.active {
   color: var(--accent-strong);
-  background: var(--soft);
+  background: var(--surface);
   font-weight: 600;
 }
 .position-browser {
-  margin-top: 4px;
+  margin-top: 0;
   padding: 0;
   border: 0;
   background: none;
@@ -1087,6 +1089,9 @@ small {
   background: white;
   margin: 0 0 var(--space-2);
   padding: var(--space-2) 0 var(--space-1);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
 }
 .inspector-tabs {
   display: flex;
@@ -1095,7 +1100,8 @@ small {
   border-radius: var(--radius);
   padding: 2px;
   gap: 2px;
-  background: transparent;
+  background: var(--surface-muted);
+  flex: 1;
 }
 .inspector-tabs button {
   border: 0;
@@ -1109,11 +1115,11 @@ small {
 }
 .inspector-tabs button.active {
   color: var(--accent-strong);
-  background: var(--soft);
+  background: var(--surface);
   font-weight: 600;
 }
 .inspector-pane > section {
-  margin-bottom: var(--space-3);
+  margin-bottom: 16px;
 }
 .inspector-pane section > h2 {
   margin-bottom: var(--space-1);
@@ -1305,7 +1311,7 @@ input[type="checkbox"] {
 .chip {
   border: 0;
   color: var(--muted);
-  background: #f0f3ed;
+  background: var(--surface-muted);
   border-radius: 5px;
   padding: 5px 7px;
   font-size: var(--text-caption);
@@ -1315,9 +1321,10 @@ input[type="checkbox"] {
 .actor-card {
   border: 0;
   border-radius: 0;
-  padding: var(--space-2);
-  margin-bottom: var(--space-2);
-  background: #f8f8fa;
+  position: relative;
+  padding: var(--space-3) var(--space-2);
+  margin: 0 calc(-1 * var(--space-2)) var(--space-1);
+  background: #f7f7fa;
 }
 .new-study {
   margin-bottom: 12px;
@@ -1394,7 +1401,7 @@ input[type="checkbox"] {
 .contact-defaults li {
   font-size: var(--text-caption);
   line-height: 1.5;
-  background: #f3f6ef;
+  background: var(--surface-muted);
   border-radius: 7px;
   padding: var(--space-2);
   margin: var(--space-1) 0;
@@ -1840,7 +1847,7 @@ dialog .buttons {
   #panel {
     padding: 0 var(--space-2);
     overflow: auto;
-    scroll-padding-top: 124px;
+    scroll-padding-top: 64px;
   }
   .library-top {
     padding: var(--space-2) var(--space-2) var(--space-1);
@@ -1972,6 +1979,7 @@ dialog .buttons {
 }
 .icon-control,
 .stage-toolbar .icon-control {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1982,7 +1990,7 @@ dialog .buttons {
   padding: 0;
   flex-shrink: 0;
 }
-.display-options > summary.icon-control::before {
+summary.icon-control::before {
   display: none;
 }
 .custom-hint {
@@ -2030,5 +2038,204 @@ dialog .buttons {
     gap: 0;
     margin-left: 0;
     padding-left: 0;
+  }
+}
+.library-navigation {
+  position: relative;
+  margin-top: var(--space-2);
+}
+.position-browser > summary.icon-control {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+}
+.position-browser-body {
+  margin-top: var(--space-1);
+}
+.library-scopes .icon-control,
+.inspector-tabs .icon-control {
+  flex: 1;
+  width: auto;
+  padding: 0;
+}
+:is(.library-scopes, .inspector-tabs) .icon-control.active {
+  box-shadow: 0 1px 4px #20202a0a;
+}
+.position-browser[open] > summary.icon-control,
+.filter-toggle[aria-expanded="true"],
+.filter-toggle:has(.icon-count) {
+  background: var(--soft);
+  color: var(--accent-strong);
+}
+.icon-count {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  display: grid;
+  place-items: center;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--accent-strong);
+  color: #fff;
+  font-size: 9px;
+  line-height: 1;
+}
+.description-actions,
+.figure-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.description-actions .examples {
+  display: flex;
+  gap: var(--space-1);
+  margin: 0 auto 0 0;
+}
+.figure-actions {
+  margin-bottom: var(--space-2);
+}
+.figure-actions h2 {
+  margin-right: auto;
+}
+.inspector-pane section > h2,
+.figure-actions h2 {
+  font-size: var(--text-control);
+  font-weight: 700;
+  letter-spacing: 0.1px;
+  line-height: 1.5;
+}
+.inspector-pane section > h2 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: var(--space-2);
+}
+.inspector-pane section > h2::before {
+  content: "";
+  width: 3px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--accent);
+  opacity: 0.6;
+}
+.composition-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: var(--space-2);
+}
+.composition-fields > :first-child,
+.composition-fields > .hint {
+  grid-column: 1 / -1;
+}
+.composition-fields > .field {
+  margin: var(--space-1) 0;
+}
+.actor-card > h3 {
+  min-height: 32px;
+  padding-right: 40px;
+}
+.actor-card > .danger.icon-control {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-2);
+  background: transparent;
+}
+.actor-card > .danger.icon-control:hover {
+  background: #fbeeed;
+}
+.favorite.icon-control[aria-pressed="true"] .ui-icon {
+  fill: currentColor;
+  fill-opacity: 0.15;
+}
+.preset-card > :is(.favorite, .position-details).icon-control {
+  position: absolute;
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  min-height: 28px;
+  border-radius: 6px;
+}
+.preset-card > :is(.favorite, .position-details).icon-control .ui-icon {
+  width: 15px;
+  height: 15px;
+}
+.preset-card:has(.position-details) .preset-select {
+  min-height: 64px;
+}
+.topbar .icon-control {
+  padding: 0;
+}
+.library-bottom {
+  min-height: 40px;
+  background: #fafafd;
+}
+.mobile-nav .icon-control {
+  flex: 1;
+  width: auto;
+  height: 44px;
+  border-radius: 0;
+}
+.mobile-nav .ui-icon {
+  width: 21px;
+  height: 21px;
+}
+.mobile-nav .icon-control.active::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 24px;
+  height: 2px;
+  border-radius: 0 0 2px 2px;
+  background: var(--accent);
+}
+.placement-editor {
+  position: relative;
+}
+.placement-editor > .toggle {
+  min-height: 32px;
+  padding-right: 40px;
+}
+.placement-help {
+  padding: 0;
+}
+.placement-help > summary.icon-control {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.placement-help > .hint {
+  margin: var(--space-2) 0;
+}
+.placement-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 var(--space-2);
+}
+@media (max-width: 900px) {
+  .library-scopes {
+    padding-right: 44px;
+  }
+  .actor-card > h3 {
+    min-height: 40px;
+    padding-right: 44px;
+  }
+  .mobile-history {
+    gap: var(--space-1);
+    margin: 0;
+    order: 2;
+  }
+  .placement-editor > .toggle {
+    min-height: 40px;
+    padding-right: 44px;
+  }
+  .preset-card > :is(.favorite, .position-details).icon-control {
+    width: 36px;
+    min-width: 36px;
+    height: 36px;
+    min-height: 36px;
+  }
+  .preset-card:has(.position-details) .preset-select {
+    min-height: 76px;
   }
 }

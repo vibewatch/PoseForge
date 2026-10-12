@@ -53,7 +53,7 @@ test("all 1,283 positions are in the library and open in 3D, searchable, favorit
   await expect(
     page.getByRole("button", { name: "Positions", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
-  await page.getByText("Browse position categories", { exact: true }).click();
+  await page.locator(".position-browser > summary").click();
   await expect(page.locator(".position-category")).toHaveCount(9);
   await expect(
     page.locator(".position-category").filter({ hasText: "Partner on top" }),

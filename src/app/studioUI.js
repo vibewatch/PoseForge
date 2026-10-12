@@ -3,6 +3,7 @@ import { authoredPreview, poseDiagram } from "./diagram.js";
 import { createPreviewService } from "./previewService.js";
 import { download } from "../render/exporters.js";
 import { newId } from "./ids.js";
+import { createIcon, setControlIcon } from "./icons.js";
 import { showRegion } from "./workspaceLayout.js";
 import { positionCount } from "./libraryStore.js";
 import { CATALOG_PAGE_SIZE, catalogPage } from "../core/sourceCatalog.js";
@@ -153,6 +154,8 @@ export function buildStudio(
   clearSearch.setAttribute("aria-label", t("Clear search"));
   clearSearch.hidden = true;
   const scopes = element("div", { className: "library-scopes" });
+  scopes.setAttribute("role", "group");
+  scopes.setAttribute("aria-label", t("Library"));
   for (const [value, label] of [
     ["positions", t("Positions")],
     ["saved", t("Saved")],
@@ -285,6 +288,7 @@ export function buildStudio(
     search,
     clearSearch,
   ]);
+  searchBox.prepend(createIcon("search"));
   const positionBrowser = element("details", {
     className: "position-browser",
   });
@@ -302,8 +306,7 @@ export function buildStudio(
       searchBox,
       filterToggle,
     ]),
-    scopes,
-    positionBrowser,
+    element("div", { className: "library-navigation" }, [scopes, positionBrowser]),
     filterBar,
     filters,
   ]);
@@ -498,10 +501,15 @@ export function buildStudio(
     const activeFilters =
       Number(category.value !== "all") +
       Number(supportStatus.value !== "all");
-    filterToggle.textContent = activeFilters
+    const filterLabel = activeFilters
       ? t("Filters ({count})", { count: activeFilters })
       : t("Filters");
-    filterToggle.setAttribute("aria-label", filterToggle.textContent);
+    setControlIcon(filterToggle, "filter", filterLabel);
+    filterToggle.dataset.hint = filterLabel;
+    if (activeFilters)
+      filterToggle.append(element("span", {
+        className: "icon-count", textContent: String(activeFilters),
+      }));
     resetFilters.hidden = activeFilters === 0;
     filterBar.hidden = activeFilters === 0;
     scopes.querySelectorAll("button").forEach((node) => {

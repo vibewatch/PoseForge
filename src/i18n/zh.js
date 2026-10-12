@@ -57,6 +57,7 @@ const ui = {
   "setting|Fashion shoot": "时装摄影",
   "setting|Studio": "摄影棚",
   "Scene inspector": "场景检查器",
+  "Placement help": "位置帮助",
   Workspace: "工作区",
   Studio: "工作室",
   "Switch to English": "切换到英文",

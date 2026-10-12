@@ -158,16 +158,28 @@ away, with a 44-pixel bottom navigation bar.
 
 The workspace uses a borderless, neutral surface hierarchy, 4/8/12-pixel spacing
 and bundled **Manrope** typography with system Chinese sans-serif fallbacks:
-11-pixel captions, 12-pixel controls,
+11-pixel captions, 12-pixel controls and compact inspector headings,
 13-pixel body text, 14-pixel section headings and 18-pixel scene titles, with
 500/600/700 weights. Dropdowns and primary touch controls retain at least
 40-pixel height.
-The camera dock and compact header/library actions use consistent line icons
-with their original accessible names. Custom hints replace native browser
+The camera dock, mobile navigation and panel actions use consistent line icons
+with their original accessible names. Library collection/category navigation and
+Scene/Figures switching share a quiet segmented surface with a white selected
+tile and purple accent. Search, field labels, content names and quality warnings
+remain text; actions use icons instead of competing with that content.
+Description examples and Apply share one action row; figure capture/add actions
+sit above the figures and removal sits beside each figure heading.
+Composition fields are paired, placement coordinates form XYZ rows, and longer
+placement help unfolds on demand. Mobile history sits beside the editor tabs
+rather than adding a second toolbar row.
+Custom hints replace native browser
 tooltips throughout static and dynamically generated UI: hover or keyboard focus
 shows a hint, Escape dismisses it, and a half-second touch hold shows it without
 activating the action. Normal taps and scrolling are unchanged. Hints remain
 hoverable, fit the viewport, follow live label updates and work inside dialogs.
+Leaving both the trigger and hint dismisses it after a brief 150 ms grace period,
+even if a clicked or previously focused button retains focus. Keyboard focus
+still reveals hints; Escape, scrolling and switching surfaces dismiss them.
 All dropdowns use the same custom menu, including dynamic figure/contact
 controls and export dialogs. Arrow keys, Home/End and typeahead highlight a
 choice; Enter or Space commits it, while Escape, Tab or clicking outside

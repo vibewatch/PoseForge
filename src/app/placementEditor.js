@@ -38,6 +38,9 @@ export function createPlacementEditor(getActor, changed) {
     textContent: t("Reset placement"),
     disabled: true,
   });
+  capture.dataset.icon = "capture";
+  guide.dataset.icon = "guide";
+  reset.dataset.icon = "reset";
   const hint = el("p", {
     className: "hint",
     textContent: t(
@@ -168,13 +171,15 @@ export function createPlacementEditor(getActor, changed) {
     feedbackKind = null;
     changed();
   });
-  const body = el("div", {}, [
+  const help = el("summary", { textContent: t("Placement help") });
+  help.dataset.icon = "info";
+  const body = el("div", { className: "placement-editor" }, [
     el("label", { className: "toggle" }, [
       fixed,
       el("span", { textContent: t("Keep placement") }),
     ]),
-    hint,
-    ...fields.map(({ field }) => field),
+    el("details", { className: "placement-help" }, [help, hint]),
+    el("div", { className: "placement-fields" }, fields.map(({ field }) => field)),
     output,
     el("div", { className: "buttons" }, [capture, guide, reset]),
     feedback,

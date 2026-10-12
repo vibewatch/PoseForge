@@ -102,7 +102,7 @@ test("position categories, statuses and mobile controls remain accessible", asyn
   await page.goto("/?preset=builtin.standing-female");
   await ready(page);
   await positions(page);
-  await page.getByText("Browse position categories", { exact: true }).click();
+  await page.locator(".position-browser > summary").click();
   await expect(page.locator(".position-category")).toHaveCount(9);
   await expect(
     page.locator(".position-category").filter({ hasText: "Face-to-face" }),

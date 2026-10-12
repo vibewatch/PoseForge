@@ -19,6 +19,16 @@ preservation of existing descriptions, modal hints, custom-menu coexistence,
 Chinese labels and Axe. Real Chrome touch events verify that a long press
 shows a hint without changing the camera view while a normal tap still changes it.
 Native touch swipes also scroll the catalog without loading a card or opening a hint.
+Pointer-exit checks also leave keyboard-focused and mouse-clicked triggers,
+requiring dismissal within one second without moving keyboard focus.
+
+`unified-style.spec.js` covers icon-only panel/mobile navigation, retained
+accessible names and pressed states, live filter-count badges, category
+disclosure, figure addition/removal and undo/redo, placement action icons and
+help disclosure, aligned XYZ fields, non-overlapping source-card actions,
+Chinese names and Axe at 320/390-pixel phone and 844-pixel landscape widths.
+Navigation uses a shared muted track/white selected tile; editing actions live
+in dedicated rows, while field labels, content names and quality feedback remain text.
 
 `custom-select.spec.js` covers the shared custom menu with real pointer/touch
 and keyboard interactions, including arrows, Home/End, PageDown, F4, typeahead,
@@ -40,7 +50,16 @@ This changes UI presentation and disclosure, not the scene contract, renderer,
 solver, model assets or browser-storage format. Chrome automation and Axe are
 not a physical-device or assistive-technology certification.
 
-**Edge-panel/icon follow-up:** 14 focused Node checks and 20 unique browser
+**Unified style follow-up:** 14 focused Node checks and 24 unique browser
+scenarios passed across the regression batch and focused reruns. The final
+12-case batch covers pointer-exit dismissal, responsive icon navigation,
+sticky-header focus, placement precision/validation, mobile contact editing,
+history and localization. Two additional source-catalog/category scenarios
+passed. Axe and desktop/mobile screenshot inspection cover the redesigned
+navigation and grouped fields. The compact mobile header keeps an 8-pixel
+focus-scroll clearance below its sticky controls.
+
+**Previous edge-panel/icon follow-up:** 14 focused Node checks and 20 unique browser
 scenarios passed across the layout/localization regression batch and focused
 reruns. The final hint/menu/camera-gesture batch passed 11/11. Initial checks
 caught short-landscape-only icon styling and modal focus/toggle ordering; both

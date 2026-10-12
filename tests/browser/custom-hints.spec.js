@@ -62,6 +62,22 @@ test("custom hints support keyboard, hover transfer, dismissal, live updates and
   await expect(hint).toBeHidden();
   await expect(fit).toBeFocused();
   await expect(fit).toHaveAttribute("aria-describedby", "existing-help");
+  await fit.hover();
+  // Escape remains dismissed until the pointer leaves the control.
+  await expect(hint).toBeHidden();
+  await page.mouse.move(700, 500);
+  await fit.hover();
+  await expect(hint).toHaveText("Fit figures (F)");
+  await page.mouse.move(700, 500);
+  await expect(hint).toBeHidden({ timeout: 1000 });
+  await expect(fit).toBeFocused();
+  await page.locator("#zoom-in").click();
+  await expect(page.locator("#zoom-in")).toBeFocused();
+  await page.mouse.move(700, 500);
+  await page.locator("#zoom-in").hover();
+  await expect(hint).toHaveText("Zoom in");
+  await page.mouse.move(700, 500);
+  await expect(hint).toBeHidden({ timeout: 1000 });
   await page.locator("#zoom-in").hover();
   await expect(hint).toHaveText("Zoom in");
   await hint.hover();

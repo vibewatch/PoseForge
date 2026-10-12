@@ -121,7 +121,11 @@ export function bindCustomHints(root = document.body) {
       return;
     }
     const target = candidate(event.target);
-    if (!target || target === owner || target === pending) return;
+    if (target === owner) {
+      clearTimeout(hideTimer);
+      return;
+    }
+    if (!target || target === pending) return;
     cancelTimers();
     pending = target;
     showTimer = setTimeout(() => show(target), 350);
@@ -133,8 +137,10 @@ export function bindCustomHints(root = document.body) {
       clearTimeout(showTimer);
       pending = null;
     }
-    if (!owner || owner.contains(event.relatedTarget) || tooltip.contains(event.relatedTarget)) return;
-    if (owner.contains(doc.activeElement) || tooltip.contains(doc.activeElement)) return;
+    if (!owner ||
+        (!owner.contains(event.target) && !tooltip.contains(event.target)) ||
+        owner.contains(event.relatedTarget) || tooltip.contains(event.relatedTarget)) return;
+    if (tooltip.contains(doc.activeElement)) return;
     hideTimer = setTimeout(hide, 150);
   });
   listen(doc, "focusin", (event) => {

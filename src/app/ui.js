@@ -266,6 +266,8 @@ export function buildPanel(root, handlers) {
     hidden: true,
   });
   const tabs = el("div", { className: "inspector-tabs" });
+  tabs.setAttribute("role", "group");
+  tabs.setAttribute("aria-label", t("Scene inspector"));
   const tabButtons = [t("Scene"), t("Figures")].map((name, index) => {
     const button = el("button", {
       type: "button",
@@ -333,6 +335,10 @@ export function buildPanel(root, handlers) {
     textContent: t("Apply description"),
     onclick: () => handlers.onText(input.value),
   });
+  generate.dataset.icon = "apply";
+  examples.querySelectorAll("button").forEach((button, index) => {
+    button.dataset.icon = index ? "seated" : "standing";
+  });
   scenePane.append(
     section(
       t("Describe a scene"),
@@ -343,8 +349,7 @@ export function buildPanel(root, handlers) {
           textContent: t("Pose description"),
         }),
         input,
-        generate,
-        examples,
+        el("div", { className: "description-actions" }, [examples, generate]),
       ]),
     ),
   );
@@ -393,6 +398,7 @@ export function buildPanel(root, handlers) {
     facing.field,
     placementHint,
   ]);
+  overrides.className = "composition-fields";
   scenePane.append(
     section(t("Composition"), overrides),
     contactEditor.root,
@@ -420,16 +426,10 @@ export function buildPanel(root, handlers) {
       emit();
     },
   });
-  figurePane.append(
-    captureLayout,
-    el("p", {
-      className: "hint",
-      textContent: t(
-        "Keep every figure’s completed placement and joint angles as an editable layout.",
-      ),
-    }),
-    actorHost,
-  );
+  captureLayout.dataset.icon = "capture";
+  captureLayout.dataset.hint = `${t("Capture current layout")} · ${t(
+    "Keep every figure’s completed placement and joint angles as an editable layout.",
+  )}`;
   const addFigure = el("button", {
     className: "action full",
     type: "button",
@@ -452,7 +452,15 @@ export function buildPanel(root, handlers) {
       emit();
     },
   });
-  figurePane.append(addFigure);
+  addFigure.dataset.icon = "add-figure";
+  figurePane.append(
+    el("div", { className: "figure-actions" }, [
+      el("h2", { textContent: t("Figures") }),
+      captureLayout,
+      addFigure,
+    ]),
+    actorHost,
+  );
 
   /* ---- wiring ---- */
 
@@ -577,6 +585,8 @@ export function buildPanel(root, handlers) {
       type: "button",
       textContent: t("Reset all"),
     });
+    reset.dataset.icon = "reset";
+    resetAll.dataset.icon = "reset-all";
     const showSolved = () => {
       const solved = solvedJoints?.[bone.select.value];
       solvedOutput.textContent = solved
