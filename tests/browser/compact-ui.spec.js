@@ -22,7 +22,7 @@ async function start(page) {
 async function positions(page) {
   await page.getByRole("button", { name: "Positions", exact: true }).click();
   await openLibraryFilters(page);
-  await page.getByLabel("Support status").selectOption("interaction-3d");
+  await page.getByLabel("Support status", { exact: true }).selectOption("interaction-3d");
   await page.getByRole("button", { name: "Filters (1)", exact: true }).click();
   await expect(page.locator(".preset-card")).toHaveCount(24);
 }

@@ -1,5 +1,5 @@
 import { newId } from "./ids.js";
-import { createInformationHint, setInformationHint } from "./icons.js";
+import { createIcon, createInformationHint, setInformationHint } from "./icons.js";
 import { message, t } from "../i18n/index.js";
 
 const POINTS = [
@@ -109,10 +109,10 @@ export function createContactEditor(onChange) {
   add.dataset.icon = "contact";
   const root = node(
     "section",
-    { className: "contact-editor", id: "contact-editor" },
+    { className: "contact-editor panel-section", id: "contact-editor" },
     [
       node("div", { className: "panel-section-heading" }, [
-        node("h2", { textContent: t("Partner contacts") }),
+        node("h2", {}, [createIcon("contact"), document.createTextNode(t("Partner contacts"))]),
         information,
       ]),
       mode.field,
@@ -233,6 +233,7 @@ export function createContactEditor(onChange) {
         });
       const showStrength = () => {
         readout.textContent = `${Math.round(Number(strength.value) * 100)}%`;
+        strength.style.setProperty("--fill", readout.textContent);
       };
       strength.oninput = showStrength;
       strength.onchange = () =>

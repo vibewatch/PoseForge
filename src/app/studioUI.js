@@ -212,6 +212,23 @@ export function buildStudio(
   );
   filterToggle.setAttribute("aria-expanded", "false");
   filterToggle.setAttribute("aria-controls", filters.id);
+  const chipHost = element("div", { className: "filter-summary" });
+  function filterChip(select, label) {
+    const value = element("span", { className: "filter-chip-value" });
+    const control = button("", () => {
+      select.value = "all";
+      page = 0;
+      refresh();
+      (chipHost.querySelector(".filter-chip:not([hidden])") ?? filterToggle).focus();
+    }, "filter-chip");
+    control.append(value, createIcon("close"));
+    chipHost.append(control);
+    return { select, label, control, value };
+  }
+  const appliedFilters = [
+    filterChip(category, t("Category")),
+    filterChip(supportStatus, t("Support status")),
+  ];
   const resetFilters = button(
     t("Reset filters"),
     () => {
@@ -223,10 +240,21 @@ export function buildStudio(
     },
     "text-button reset-filters",
   );
+  const filterHeader = element("div", { className: "filter-editor-heading" }, [
+    element("span", { textContent: t("Filters") }),
+  ]);
+  filters.prepend(filterHeader);
+  function syncFilterSurface() {
+    const open = !filters.hidden;
+    filterBar.hidden = open || (category.value === "all" && supportStatus.value === "all");
+    const host = open ? filterHeader : filterBar;
+    if (resetFilters.parentElement !== host) host.append(resetFilters);
+  }
   function setFiltersOpen(open) {
     filters.hidden = !open;
     filterToggle.setAttribute("aria-expanded", String(open));
     if (open) positionBrowser.open = false;
+    syncFilterSurface();
   }
   filters.onkeydown = (event) => {
     if (event.key !== "Escape") return;
@@ -267,8 +295,10 @@ export function buildStudio(
   const filterBar = element(
     "div",
     { className: "library-filter-bar", hidden: true },
-    [element("span", { textContent: t("Filtered results") }), resetFilters],
+    [chipHost, resetFilters],
   );
+  filterBar.setAttribute("role", "group");
+  filterBar.setAttribute("aria-label", t("Active filters"));
   const searchBox = element("div", { className: "search-box" }, [
     element("label", {
       htmlFor: search.id,
@@ -277,6 +307,7 @@ export function buildStudio(
     }),
     search,
     clearSearch,
+    filterToggle,
   ]);
   searchBox.prepend(createIcon("search"));
   const positionBrowser = element("details", {
@@ -295,14 +326,11 @@ export function buildStudio(
   });
   const top = element("div", { className: "library-top" }, [
     element("div", { className: "library-title" }, [
-      element("h2", { textContent: t("Library") }),
+      element("h2", {}, [createIcon("library"), document.createTextNode(t("Library"))]),
       count,
       newStudy,
     ]),
-    element("div", { className: "library-search-row" }, [
-      searchBox,
-      filterToggle,
-    ]),
+    element("div", { className: "library-search-row" }, [searchBox]),
     element("div", { className: "library-navigation" }, [scopes, positionBrowser]),
     filterBar,
     filters,
@@ -508,7 +536,15 @@ export function buildStudio(
         className: "icon-count", textContent: String(activeFilters),
       }));
     resetFilters.hidden = activeFilters === 0;
-    filterBar.hidden = activeFilters === 0;
+    syncFilterSurface();
+    for (const filter of appliedFilters) {
+      const value = filter.select.selectedOptions[0]?.label ?? "";
+      filter.control.hidden = filter.select.value === "all";
+      filter.value.textContent = value;
+      const label = t("Remove {label} filter: {value}", { label: filter.label, value });
+      filter.control.setAttribute("aria-label", label);
+      filter.control.dataset.hint = label;
+    }
     scopes.querySelectorAll("button").forEach((node) => {
       const active = scope === node.dataset.scope;
       node.classList.toggle("active", active);

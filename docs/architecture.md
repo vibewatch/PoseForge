@@ -103,12 +103,12 @@ src/workers/
 
 src/app/
   main.js          one thread of control: panel → worker → viewport → export
-  ui.js            description box, override controls, interpretation readout
+  ui.js            shared panel sections/disclosures, prompt composer and scene controls
   contactEditor.js figure/landmark contact editing and measured feedback
-  studioUI.js      library, filters, dialogs and export choices
+  studioUI.js      integrated catalog search, inline filters/chips, dialogs and exports
   customSelect.js  headed top-layer menus with local scrolling; native labels/values stay bound
   icons.js         shared SVGs, named icon actions/navigation and information-hint controls
-  customHints.js   shared hover/focus/touch hints; tap-to-read information and live title migration
+  customHints.js   focus-scroll-safe hover/focus/touch hints, information and live title migration
   workspaceLayout.js remembered drawers, mobile regions and Display disclosure
   libraryStore.js  atomic browser persistence for saved presets/favorites
   diagram.js       schematic joint previews

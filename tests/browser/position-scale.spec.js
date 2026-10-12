@@ -13,7 +13,7 @@ import { openLibraryFilters } from "./helpers/library.js";
 const positions = async (page) => {
   await page.getByRole("button", { name: "Positions", exact: true }).click();
   await openLibraryFilters(page);
-  await page.getByLabel("Support status").selectOption("interaction-3d");
+  await page.getByLabel("Support status", { exact: true }).selectOption("interaction-3d");
   await expect(page.locator(".preset-card")).toHaveCount(24);
 };
 const digest = (value) =>
@@ -112,9 +112,9 @@ test("position categories, statuses and mobile controls remain accessible", asyn
   ).toHaveCount(1);
   await openLibraryFilters(page);
   await expect(page.locator(".position-browser")).not.toHaveAttribute("open", "");
-  await page.getByLabel("Support status").selectOption("verified-3d");
+  await page.getByLabel("Support status", { exact: true }).selectOption("verified-3d");
   await expect(page.locator(".preset-card")).toHaveCount(23);
-  await page.getByLabel("Support status").selectOption("all");
+  await page.getByLabel("Support status", { exact: true }).selectOption("all");
   await page.getByRole("button", { name: "Filters", exact: true }).click();
   for (const width of [1440, 390, 320]) {
     await page.setViewportSize({ width, height: 844 });
@@ -197,14 +197,14 @@ test("source association survives save, export and reload without inheriting a v
   await expect(page.locator("#scene-source")).toContainText("kneeling-missionary");
   await page.getByRole("button", { name: "Saved", exact: true }).click();
   await openLibraryFilters(page);
-  await page.getByLabel("Support status").selectOption("needs-adjustment");
+  await page.getByLabel("Support status", { exact: true }).selectOption("needs-adjustment");
   await expect(page.locator(".preset-card")).toHaveCount(1);
-  await page.getByLabel("Support status").selectOption("verified-3d");
+  await page.getByLabel("Support status", { exact: true }).selectOption("verified-3d");
   await expect(page.locator(".preset-card")).toHaveCount(0);
   await page.getByRole("button", { name: "Positions", exact: true }).click();
-  await page.getByLabel("Support status").selectOption("verified-3d");
+  await page.getByLabel("Support status", { exact: true }).selectOption("verified-3d");
   await expect(page.locator(".preset-card")).toHaveCount(23);
-  await page.getByLabel("Support status").selectOption("needs-adjustment");
+  await page.getByLabel("Support status", { exact: true }).selectOption("needs-adjustment");
   await expect(page.locator(".preset-card")).toHaveCount(0);
   await page.getByRole("button", { name: "Saved", exact: true }).click();
   await page.getByLabel("Search presets").fill("kneeling-missionary");

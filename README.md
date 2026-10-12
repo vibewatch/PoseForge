@@ -164,11 +164,17 @@ and bundled **Manrope** typography with system Chinese sans-serif fallbacks:
 40-pixel height.
 The camera dock, mobile navigation and panel actions use consistent line icons
 with their original accessible names. Library collection/category navigation and
-Scene/Figures switching share a quiet segmented surface with a white selected
-tile and purple accent. Search, field labels, content names and quality warnings
+Scene/Figures switching share a quiet segmented surface with a dark selected
+tile and white icon. Search, field labels, content names and quality warnings
 remain text; actions use icons instead of competing with that content.
 Description examples and Apply share one action row; figure capture/add actions
 sit above the figures and removal sits beside each figure heading.
+The side panels use a shared Studio component style: pale violet-gray backing,
+white editing sections with icon headings, an integrated description composer,
+accented disclosure headers, level sliders with numeric badges and compact
+checkbox switches. Body type and posture share one row. These controls keep
+their native labels, values and keyboard behavior; the panels themselves and
+full-width catalog rows retain square, flush edges.
 Composition fields are paired and placement coordinates form XYZ rows.
 Explanatory panel text lives behind small information icons beside its section
 or control; hover, focus or a normal tap reveals a custom hint. Contact guidance,
@@ -194,9 +200,14 @@ bindings but do not display system menus. Menus have a quiet sticky heading,
 soft selected rows and a checkmark, with scrolling confined to the menu.
 Library filters use full-width rows so longer category/status names remain
 readable. Filters and category browsing open one at a time without resetting
-applied filters. The library keeps search
-beside **Filters**, and provides a collapsible category browser plus
-active-filter counts and one-click reset. Library entries are short rows with
+applied filters. Search, its magnifier, Clear and **Filters** share one stable
+grid row: typing never adds another row or displaces an icon. Search hints
+dismiss while typing. A compact applied-filter summary appears when the editor
+is closed; each condition can be removed independently without clearing the
+search or another filter. Opening the inline editor replaces the summary with
+labeled fields and Reset, rather than repeating the same selections. A
+collapsible category browser, active-filter counts and one-click reset remain.
+Library entries are short rows with
 visible quality labels; favorite and details actions appear on hover or focus
 (always on touch screens). Press **/** to open and focus search and
 **Ctrl/⌘ Z** / **Ctrl/⌘ Shift Z** (or **Ctrl Y**) to undo and redo. **Library tools** consolidates preset and position-override transfers; the

@@ -47,7 +47,7 @@ import { FOOT_SHAPE_NAMES } from "../core/footPose.js";
 import { newId } from "./ids.js";
 import { createContactEditor } from "./contactEditor.js";
 import { createPlacementEditor } from "./placementEditor.js";
-import { createInformationHint, setInformationHint } from "./icons.js";
+import { createIcon, createInformationHint, setInformationHint } from "./icons.js";
 import { captureSolvedPose, isFixedPlacement } from "../core/placement.js";
 import { message, t, term } from "../i18n/index.js";
 
@@ -63,13 +63,12 @@ const el = (tag, props = {}, children = []) => {
   return node;
 };
 
-const section = (title, body, information = null) =>
-  el("section", {}, [
-    information
-      ? el("div", { className: "panel-section-heading" }, [
-          el("h2", { textContent: title }), information,
-        ])
-      : el("h2", { textContent: title }),
+const section = (title, body, information = null, icon = "edit") =>
+  el("section", { className: "panel-section" }, [
+    el("div", { className: "panel-section-heading" }, [
+      el("h2", {}, [createIcon(icon), document.createTextNode(title)]),
+      ...(information ? [information] : []),
+    ]),
     body,
   ]);
 
@@ -169,7 +168,7 @@ function toggles(label, options, { labels = {} } = {}) {
 function group(title) {
   const summary = el("summary", { textContent: title });
   const body = el("div", { className: "group-body" });
-  return { details: el("details", {}, [summary, body]), body, summary };
+  return { details: el("details", { className: "panel-group" }, [summary, body]), body, summary };
 }
 
 /** One side of a paired control, read back from a `string | {l, r}` spec. */
@@ -350,7 +349,7 @@ export function buildPanel(root, handlers) {
   scenePane.append(
     section(
       t("Describe a scene"),
-      el("div", {}, [
+      el("div", { className: "description-composer" }, [
         el("label", {
           className: "sr-only",
           htmlFor: input.id,
@@ -407,7 +406,7 @@ export function buildPanel(root, handlers) {
   ]);
   overrides.className = "composition-fields";
   scenePane.append(
-    section(t("Composition"), overrides, placementHint),
+    section(t("Composition"), overrides, placementHint, "view-three-quarter"),
     contactEditor.root,
     interpretation.details,
     diagnostics.details,
@@ -831,11 +830,13 @@ export function buildPanel(root, handlers) {
       actorHost.append(
         el("div", { className: "actor-card" }, [
           title,
-          nameField,
-          bodyType.field,
-          posture.field,
-          stature.field,
-          build.field,
+          el("div", { className: "figure-properties" }, [
+            nameField,
+            bodyType.field,
+            posture.field,
+            stature.field,
+            build.field,
+          ]),
           look.details,
           ends.details,
           placementGroup.details,

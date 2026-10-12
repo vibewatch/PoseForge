@@ -150,7 +150,7 @@ test("a fresh library has all artistic previews ready without importing or creat
   expect(requests).not.toContain("generated-studies-v1.json");
   await page.getByLabel("Search positions").fill("");
   await page.getByRole("button", { name: "Filters", exact: true }).click();
-  await page.getByLabel("Support status").selectOption("interaction-3d");
+  await page.getByLabel("Support status", { exact: true }).selectOption("interaction-3d");
   await expect(page.locator(".library-title > span")).toHaveText(
     "1,283 positions",
   );

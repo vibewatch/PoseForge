@@ -198,3 +198,38 @@ exclusivity, unchanged filter values, touch/Chinese hints, authoring/history,
 flush drawer edges and phone/landscape layouts, with Axe checks on visible menus
 and information hints. The final 10-case regression batch passes without retries.
 Architecture and translation checks pass all 14 cases.
+
+## Studio components and integrated search
+
+The filled-search regression was reproduced before changing the layout:
+showing Clear doubled the search container from 32 to 64 pixels because the
+shared icon class overrode its absolute positioning. The replacement grid keeps
+the magnifier, input, Clear and Filters in one row. Browser checks measure equal
+empty/filled/cleared height, icon/action center alignment within 0.5 pixels,
+non-overlapping controls and viewport bounds at 1440, 1080, 390 and 320 pixels.
+Typing dismisses search hints rather than leaving a tooltip over the heading.
+
+The selected filter approach is an integrated search field and inline editor,
+with removable chips shown only while the editor is closed. Fields and chips
+never duplicate the same selections on screen; the shared Reset control stays
+with the visible surface. Removing a chip retains the query and other filter,
+returns to page one and restores useful keyboard focus. Native select labels
+remain unchanged; tests use exact names to distinguish them from removal buttons.
+
+Both panels share pale backing, white editing surfaces, dark selected navigation,
+icon section headings, a prompt composer, accented disclosures, paired figure
+properties, compact switches and level sliders with numeric readouts. Contact
+pull sliders reuse their existing percentage readout for the filled track.
+Native focus scrolling settles before a keyboard hint appears; ordinary scrolling,
+wheel input and pointer departure still dismiss it.
+
+Verification covers 26 focused browser scenarios across the component,
+filter/information, hint, compact-layout, unified-style, custom-select and position
+catalog suites, including Axe checks, Chinese/touch operation, enlarged text,
+history, dialogs, filter reset/pagination and native slider keyboard changes.
+Forced-color checks verify the search focus indicator, selected navigation and
+native checkbox/slider fallback rather than invisible custom-painted controls.
+The final eight-case regression batch passes without retries. The production
+build and all 14 architecture/localization checks pass. Solver, storage, catalog
+data, panel widths and full-window 3D layout are unchanged; this is not a new
+geometry audit or a physical-device certification.

@@ -15,6 +15,39 @@
 > competition with content; labels, content names and warnings remain readable text.
 > The rest of this plan is kept as historical evidence.
 
+## Current Studio panel design
+
+Four filter approaches were considered:
+
+| Approach | Strength | Tradeoff |
+| --- | --- | --- |
+| Integrated search + inline filter editor | Stable location, no occlusion, works on phones and desktop | Expanded fields temporarily use list space |
+| Quick-filter chips as the primary controls | One-tap access to frequent choices | Long categories and multiple dimensions crowd narrow drawers |
+| Floating filter card | Leaves the list height unchanged | Obscures content and separates current state from the search field |
+| Permanent faceted sidebar | All conditions remain visible | Consumes space even when no filtering is needed |
+
+**Selected: integrated search + inline editor**, with removable chips as a
+collapsed summary, not a second control system. Search, Clear and Filters share
+one grid row. Full-width labeled fields replace the summary while editing;
+Reset stays with the currently visible surface. Changes apply immediately to
+the catalog without changing or solving the active scene. Removing one chip
+keeps the query and other selection, resets pagination and moves focus to the
+remaining chip or Filters.
+
+The Studio style uses violet-gray panel backing, white section surfaces and
+dark selected navigation tiles. Custom components include an integrated prompt
+composer, icon section headings, accented disclosures, paired figure properties,
+level sliders with numeric badges and native checkboxes styled as compact
+switches. Spacing remains 4/8/12 pixels; outer panels and catalog rows remain
+square and flush. Native control semantics, explicit authoring actions, quality
+labels, measured results and error messages are preserved.
+
+Search layout must be checked **with a nonempty query** as well as empty:
+the former clear-button positioning was overridden by shared icon styling,
+doubling the input container height and displacing the magnifier. Keyboard
+hints wait for native focus scrolling to settle; intentional scrolling and
+search input dismiss them.
+
 ## Intent
 
 Make browsing and editing feel like a focused workspace. Keep the current calm

@@ -122,7 +122,7 @@ test("a position has an independently edited, captured and replace-confirmed ove
   await ready(page);
   await saveStudy(page, "My independent posture");
   await page.getByRole("button", { name: "Filters", exact: true }).click();
-  await page.getByLabel("Support status").selectOption("authored-3d");
+  await page.getByLabel("Support status", { exact: true }).selectOption("authored-3d");
   await expect(page.locator(".preset-card")).toHaveCount(1);
   await expect(page.locator(".preset-card .support-badge")).toHaveText(
     "Authored · unreviewed",
@@ -270,7 +270,7 @@ test("bulk imports preview counts, keep existing by default, replace explicitly 
   await ready(page);
   await page.getByLabel("Search positions").fill("");
   await page.getByRole("button", { name: "Filters", exact: true }).click();
-  await page.getByLabel("Support status").selectOption("authored-3d");
+  await page.getByLabel("Support status", { exact: true }).selectOption("authored-3d");
   await expect(page.locator(".library-title > span")).toHaveText("3 positions");
 });
 

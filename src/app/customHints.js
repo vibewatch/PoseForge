@@ -12,6 +12,7 @@ export function bindCustomHints(root = document.body) {
   const iconSelector = "button.icon-button[aria-label]";
   let owner, pending, dismissed, showTimer, hideTimer, pressTimer, press, suppress;
   let escaping = false, escapeTimer;
+  let focusFrame;
 
   const migrate = (node) => {
     for (const target of [
@@ -44,6 +45,8 @@ export function bindCustomHints(root = document.body) {
   const cancelTimers = () => {
     clearTimeout(showTimer);
     clearTimeout(hideTimer);
+    doc.defaultView.cancelAnimationFrame(focusFrame);
+    focusFrame = null;
     pending = null;
   };
   const hide = () => {
@@ -151,13 +154,22 @@ export function bindCustomHints(root = document.body) {
     }
     const target = candidate(event.target);
     if (target !== dismissed) dismissed = null;
-    if (target) show(target);
-    else hide();
+    hide();
+    if (target) {
+      pending = target;
+      focusFrame = doc.defaultView.requestAnimationFrame(() => {
+        focusFrame = null;
+        if (pending === target && doc.activeElement === target) show(target);
+      });
+    }
   });
   listen(doc, "focusout", (event) => {
     if (owner?.contains(event.relatedTarget) || tooltip.contains(event.relatedTarget)) return;
     dismissed = null;
     hide();
+  });
+  listen(doc, "input", (event) => {
+    if (event.target.matches?.('input[type="search"]')) hide();
   });
   listen(doc, "keydown", (event) => {
     if (event.key === "Escape") {
@@ -225,6 +237,11 @@ export function bindCustomHints(root = document.body) {
         !(event.target.matches("dialog") && event.target.contains(owner))) hide();
   });
   listen(doc, "scroll", (event) => {
+    // Native focus scrolling precedes the frame that reveals a keyboard hint.
+    if (focusFrame != null && pending === doc.activeElement) return;
+    if (!tooltip.contains(event.target)) hide();
+  });
+  listen(doc, "wheel", (event) => {
     if (!tooltip.contains(event.target)) hide();
   });
   listen(doc.defaultView, "resize", hide);
