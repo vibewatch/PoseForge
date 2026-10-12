@@ -311,11 +311,13 @@ test("reference studies render, camera and material work, desktop has no overflo
   await expect(
     page.getByRole("button", { name: "Front", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
+  await page.locator(".display-options > summary").click();
   await page.getByLabel("Material", { exact: true }).selectOption("clay");
   await page.locator("#viewport").focus();
   await page.keyboard.press("ArrowRight");
   await page.keyboard.press("+");
   await page.keyboard.press("f");
+  await page.locator(".display-options").evaluate((node) => { node.open = true; });
   await page.getByLabel("Material", { exact: true }).selectOption("natural");
   await page.getByRole("button", { name: "3D", exact: true }).click();
   await page.screenshot({ path: testInfo.outputPath("desktop.png") });

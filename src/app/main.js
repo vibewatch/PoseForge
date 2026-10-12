@@ -17,6 +17,7 @@ import { bindCameraInput } from "./cameraInput.js";
 import { createCameraTour } from "./cameraTour.js";
 import { createCameraMotion } from "./cameraMotion.js";
 import { bindWorkspaceLayout } from "./workspaceLayout.js";
+import { bindCustomSelects } from "./customSelect.js";
 import { createPositionClient } from "./positionClient.js";
 import {
   isPositionOverride,
@@ -43,6 +44,7 @@ import {
 const $ = (id) => document.getElementById(id);
 const clone = (value) => JSON.parse(JSON.stringify(value));
 localizeDocument();
+const removeCustomSelects = bindCustomSelects();
 // The switch names the language it switches to, in that language.
 $("language").textContent = language === "zh" ? "EN" : "中文";
 $("language").lang = language === "zh" ? "en" : "zh-CN";
@@ -848,7 +850,9 @@ $("undo").onclick = () => travel("undo");
 $("redo").onclick = () => travel("redo");
 document.addEventListener("keydown", (event) => {
   if (
+    event.defaultPrevented ||
     document.querySelector("dialog[open]") ||
+    event.target.closest?.(".custom-select") ||
     /INPUT|TEXTAREA|SELECT/.test(event.target.tagName) ||
     event.target.isContentEditable
   )
@@ -893,6 +897,7 @@ window.addEventListener("pagehide", (event) => {
     motion.stop();
     removeCameraInput();
     workspace.dispose();
+    removeCustomSelects();
     studio.dispose();
     library.close();
     worker.terminate();

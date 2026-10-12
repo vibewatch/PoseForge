@@ -44,6 +44,8 @@ const ui = {
   "Fit figures (F)": "适配人物 (F)",
   "Zoom in": "放大",
   Material: "材质",
+  Display: "显示",
+  "Options for {label}": "{label}的选项",
   Natural: "自然",
   "Clay study": "素模",
   Setting: "布景",

@@ -15,12 +15,12 @@ function readLayout(storage) {
   try {
     const saved = JSON.parse(storage.getItem(LAYOUT_KEY) ?? "null");
     return {
-      library: typeof saved?.library === "boolean" ? saved.library : true,
+      library: typeof saved?.library === "boolean" ? saved.library : false,
       inspector:
         typeof saved?.inspector === "boolean" ? saved.inspector : false,
     };
   } catch {
-    return { library: true, inspector: false };
+    return { library: false, inspector: false };
   }
 }
 
@@ -39,6 +39,16 @@ export function showRegion(region) {
 export function bindWorkspaceLayout(root, storage) {
   const state = readLayout(storage);
   const toggles = [...root.querySelectorAll("[data-drawer]")];
+  const display = root.querySelector(".display-options");
+  const closeDisplay = (event) => {
+    if (display?.open && !display.contains(event.target)) display.open = false;
+  };
+  const escapeDisplay = (event) => {
+    if (event.key !== "Escape" || !display?.open || event.defaultPrevented) return;
+    display.open = false;
+    display.querySelector("summary").focus();
+    event.preventDefault();
+  };
   function apply(name) {
     const open = state[name];
     const drawer = document.getElementById(DRAWERS[name]);
@@ -84,6 +94,8 @@ export function bindWorkspaceLayout(root, storage) {
     node.addEventListener("blur", blur);
   });
   desktop.addEventListener("change", resize);
+  root.addEventListener("pointerdown", closeDisplay);
+  root.addEventListener("keydown", escapeDisplay);
   const controller = {
     open: (name) => set(name, true),
     close: (name) => set(name, false),
@@ -93,6 +105,8 @@ export function bindWorkspaceLayout(root, storage) {
         node.removeEventListener("blur", blur);
       });
       desktop.removeEventListener("change", resize);
+      root.removeEventListener("pointerdown", closeDisplay);
+      root.removeEventListener("keydown", escapeDisplay);
       if (active === controller) active = undefined;
     },
   };

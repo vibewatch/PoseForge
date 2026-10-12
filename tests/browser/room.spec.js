@@ -91,6 +91,8 @@ async function exportPng(page, name) {
 test("a first visit opens in a bedroom, each setting is its own room, and the choice is kept", async ({
   page,
 }) => {
+  // Several dressed-figure rebuilds share this scenario on software WebGL.
+  test.setTimeout(300_000);
   await page.goto("/?preset=builtin.position.kneeling-missionary");
   await ready(page);
   const setting = page.getByLabel("Setting", { exact: true });
@@ -114,6 +116,7 @@ test("a first visit opens in a bedroom, each setting is its own room, and the ch
   const places = ["living", "hotel", "beach", "pool", "fashion", "studio"];
   for (const name of places) {
     const before = await pixels(page);
+    await page.locator(".display-options").evaluate((node) => { node.open = true; });
     await setting.selectOption(name);
     // The old room stays up until the new one's pictures have been made, and
     // the figures dress for the beach, the pool and the shoot.
@@ -126,6 +129,7 @@ test("a first visit opens in a bedroom, each setting is its own room, and the ch
   for (const room of ["bedroom", ...places.slice(0, -1)])
     expect(seen[room].corner, `${room} against the studio`).not.toEqual(seen.studio.corner);
 
+  await page.locator(".display-options").evaluate((node) => { node.open = true; });
   await setting.selectOption("living");
   await page.reload();
   await ready(page);
@@ -143,6 +147,7 @@ test("on the beach the figures are dressed for it, until that is turned off", as
   // A bedroom has no dress code to keep.
   await expect(suited).toBeHidden();
   await expect(outfit).toBeEnabled();
+  await page.locator(".display-options > summary").click();
   await page.getByLabel("Setting", { exact: true }).selectOption("beach");
   await ready(page);
   await expect(suited).toBeVisible();
@@ -166,6 +171,7 @@ test("on a phone the camera bar, with its longest setting, stays on the screen",
 }) => {
   await page.goto("/?preset=builtin.position.kneeling-missionary");
   await ready(page);
+  await page.locator(".display-options > summary").click();
   await page.getByLabel("Setting", { exact: true }).selectOption("fashion");
   for (const width of [390, 360, 320]) {
     await page.setViewportSize({ width, height: 844 });
@@ -178,6 +184,7 @@ test("on a phone the camera bar, with its longest setting, stays on the screen",
       await expect(
         page.getByRole("button", { name, exact: true }),
       ).toBeInViewport({ ratio: 1 });
+    await page.locator(".display-options").evaluate((node) => { node.open = true; });
     await expect(page.getByLabel("Material", { exact: true })).toBeInViewport({
       ratio: 1,
     });
@@ -204,6 +211,7 @@ test("the setting reads in Chinese, and fits the phone toolbar", async ({ page }
   await ready(page);
   await page.locator("#language").click();
   await expect(page.locator("#status")).toContainText("就绪", { timeout: 60_000 });
+  await page.locator(".display-options > summary").click();
   const setting = page.getByLabel("布景", { exact: true });
   await expect(setting).toBeVisible();
   expect(await setting.locator("option").allTextContents()).toEqual(["卧室", "客厅", "酒店套房", "海滩", "泳池边", "时装摄影", "摄影棚"]);

@@ -3,7 +3,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { ready } from "./helpers/ready.js";
 import { openLibraryFilters } from "./helpers/library.js";
 
-// These tests cover the first-visit layout: library open, editor closed.
+// These tests cover the first-visit layout and the drawers opened on demand.
 test.use({ storageState: { cookies: [], origins: [] } });
 let errors;
 test.beforeEach(async ({ context }) => {
@@ -17,6 +17,7 @@ test.afterEach(() => expect(errors).toEqual([]));
 async function start(page) {
   await page.goto("/?preset=builtin.standing-female");
   await ready(page);
+  await page.locator("#toggle-library").click();
 }
 async function positions(page) {
   await page.getByRole("button", { name: "Positions", exact: true }).click();
@@ -87,7 +88,7 @@ test("compact desktop and mobile layouts expose more rows and give the scene the
       { width, height },
     );
     measurements.push(metrics);
-    expect(metrics.headerHeight).toBe(56);
+    expect(metrics.headerHeight).toBe(48);
     expect(metrics.libraryTopHeight).toBeLessThanOrEqual(245);
     expect(metrics.fullyVisibleCards).toBeGreaterThanOrEqual(
       width === 320 ? 2 : 3,
@@ -293,7 +294,7 @@ test("compact controls, filters, information dialogs and enlarged text remain ac
   await page.locator('[data-region="library"]').click();
   await page.addStyleTag({
     content:
-      "button, input, select, textarea, label, .preset-name { font-size: 16px !important; }",
+      "button, input, select, textarea, label, .preset-name, .custom-select, .select-menu { font-size: 16px !important; }",
   });
   await noOverflow(page);
   await page

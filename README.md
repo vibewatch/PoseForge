@@ -143,13 +143,30 @@ saved with **Save preset** is always an independent study. The
 they do not certify uniqueness or source accuracy. See the
 [override guide](docs/position-overrides.md).
 
-The studio is layered around the 3D scene. The canvas fills the window; a
-transparent top bar, the scene title and status, and a single camera toolbar
-float over it. On desktop the **Library** and **Edit** buttons in the top bar
-open or close the two panels as drawers over the canvas edges, and the choice is
-remembered. The library starts open and the editor closed, and **Edit posture**
-or a new study opens the editor. Smaller screens keep **Library / Studio / Edit**
-one tap away. The workspace uses bundled **Manrope** typography, keeps search
+The studio is layered around the 3D scene. A first desktop visit starts with
+both drawers closed, leaving the full window to the canvas; a compact 48-pixel
+top bar, scene title and camera toolbar float over it. **Library** and **Edit**
+open or close the two edge drawers, and the choice is remembered.
+The header and scene information use a quiet translucent backing so text stays
+readable against dark or detailed settings.
+**Edit posture** or a new study opens the editor. **Display** unfolds the
+setting and material controls above the camera toolbar; Escape or clicking
+outside closes it. Smaller screens keep **Library / Studio / Edit** one tap
+away, with a 44-pixel bottom navigation bar.
+
+The workspace uses a borderless, neutral surface hierarchy, 4/8/12-pixel spacing
+and bundled **Manrope** typography with system Chinese sans-serif fallbacks:
+11-pixel captions, 12-pixel controls,
+13-pixel body text, 14-pixel section headings and 18-pixel scene titles, with
+500/600/700 weights. Dropdowns and primary touch controls retain at least
+40-pixel height.
+All dropdowns use the same custom menu, including dynamic figure/contact
+controls and export dialogs. Arrow keys, Home/End and typeahead highlight a
+choice; Enter or Space commits it, while Escape, Tab or clicking outside
+cancels without editing the scene. Menus open above clipped drawers and dialogs,
+stay inside the viewport, skip disabled choices and follow programmatic changes
+such as undo/redo. Native select elements retain labels, form values and scene
+bindings but do not display system menus. The library keeps search
 beside **Filters**, and provides a collapsible category browser plus
 active-filter counts and one-click reset. Library entries are short rows with
 visible quality labels; favorite and details actions appear on hover or focus

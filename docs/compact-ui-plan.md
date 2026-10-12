@@ -2,7 +2,13 @@
 
 > **Superseded layout note:** the desktop Focus view described here was later
 > replaced by a full-window canvas with remembered **Library** and **Edit**
-> drawers. This plan is kept as historical evidence.
+> drawers. The current scene-first iteration starts both drawers closed on a
+> first visit, uses a 48-pixel header and 44-pixel mobile navigation, and folds
+> setting/material controls into **Display**. Surfaces are borderless, spacing
+> follows 4/8/12 pixels, and typography follows the scale documented in the
+> [README](../README.md). A shared custom-select enhancement retains native
+> values and labels while rendering keyboard-accessible top-layer menus.
+> The rest of this plan is kept as historical evidence.
 
 ## Intent
 

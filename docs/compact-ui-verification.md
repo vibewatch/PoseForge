@@ -1,5 +1,45 @@
 # Compact studio UI verification
 
+## Current borderless, scene-first workspace
+
+The current iteration uses a 48-pixel header, a 44-pixel mobile navigation bar,
+smaller edge drawers, borderless surfaces and shared 4/8/12-pixel spacing.
+Manrope follows the 11/12/13/14/18-pixel text scale documented in the README.
+The header and scene HUD have translucent backings for legibility in dark rooms.
+Both desktop drawers start closed on a first visit; existing layout choices
+remain respected. **Display** folds setting/material controls above the dock.
+
+`custom-select.spec.js` covers the shared custom menu with real pointer/touch
+and keyboard interactions, including arrows, Home/End, PageDown, F4, typeahead,
+commit/cancel, disabled choices, dynamic control rebuilding, undo, export
+dialogs and Chinese labels. Menus use the browser's top layer to avoid clipping
+inside drawers/dialogs. Native selects remain the labelled form/value owners;
+their system popup paths are intercepted. The option observer excludes ARIA
+attributes so highlighting cannot trigger a recursive synchronization loop.
+
+The layout checks require a full 1440 × 1000 canvas on a first desktop visit,
+more than 58% of the desktop width even with both drawers open, and more than
+88% of a 390 × 844 phone's height for the 3D view. Dropdowns are also checked
+at 320-pixel width and short 390-pixel landscape height. The compact regression
+suite checks sticky-header focus, enlarged text, responsive transitions and
+Axe accessibility; authoring, studio, room and language suites preserve saved
+edits, contact controls, history, actual downloads and localized settings.
+
+This changes UI presentation and disclosure, not the scene contract, renderer,
+solver, model assets or browser-storage format. Chrome automation and Axe are
+not a physical-device or assistive-technology certification.
+
+**Verification:** 24 focused Node checks and 25 unique browser scenarios passed
+across the regression batch and focused reruns. The final HUD/lifecycle batch
+passed 10/10 scenarios; the final menu/global-shortcut checks passed 2/2.
+Desktop/mobile screenshots were inspected after waiting for layout redraws.
+The seven-setting room scenario reached its former 150-second total deadline
+during repeated clothing rebuilds; its per-test limit is now 300 seconds, while
+the 30-second pixel-change and 60-second scene-ready assertions remain intact.
+That scenario passed in 2.2 minutes on the focused rerun.
+
+## Historical compact-layout milestone
+
 This report records the compact-layout milestone. Its desktop Focus view has
 since been replaced by a full-window canvas with remembered **Library** and
 **Edit** drawers; the figures below describe the milestone as measured. The later

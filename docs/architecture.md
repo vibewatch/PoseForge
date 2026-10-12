@@ -106,6 +106,8 @@ src/app/
   ui.js            description box, override controls, interpretation readout
   contactEditor.js figure/landmark contact editing and measured feedback
   studioUI.js      library, filters, dialogs and export choices
+  customSelect.js  shared top-layer choice menus; native labels/values stay bound
+  workspaceLayout.js remembered drawers, mobile regions and Display disclosure
   libraryStore.js  atomic browser persistence for saved presets/favorites
   diagram.js       schematic joint previews
   previewService.js queued preview work, bounded cache and stale-result protection

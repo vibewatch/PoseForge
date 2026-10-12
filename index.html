@@ -20,7 +20,7 @@
     <div
       id="app"
       data-mobile="studio"
-      data-library="open"
+      data-library="closed"
       data-inspector="closed"
     >
       <header class="topbar">
@@ -34,7 +34,7 @@
             class="drawer-toggle"
             data-drawer="library"
             aria-controls="library"
-            aria-expanded="true"
+            aria-expanded="false"
           >
             <span aria-hidden="true">▦</span> Library
           </button>
@@ -173,15 +173,22 @@
                 +
               </button>
             </div>
-            <div class="material-control">
-              <label for="setting" class="sr-only">Setting</label
-              ><select id="setting"></select>
-              <label for="material" class="sr-only">Material</label
-              ><select id="material">
-                <option value="natural">Natural</option>
-                <option value="clay">Clay study</option>
-              </select>
-            </div>
+            <details class="display-options">
+              <summary>Display</summary>
+              <div class="display-options-body">
+                <div class="field">
+                  <label for="setting">Setting</label>
+                  <select id="setting"></select>
+                </div>
+                <div class="field">
+                  <label for="material">Material</label>
+                  <select id="material">
+                    <option value="natural">Natural</option>
+                    <option value="clay">Clay study</option>
+                  </select>
+                </div>
+              </div>
+            </details>
           </div>
         </div>
       </main>
