@@ -904,12 +904,12 @@ small {
 .stage-top {
   top: 56px;
   right: auto;
-  max-width: min(480px, calc(100% - 24px));
+  max-width: min(400px, calc(100% - 24px));
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--space-1);
-  padding: var(--space-2);
+  gap: 2px;
+  padding: 6px;
   border-radius: var(--radius);
   background: var(--glass);
   backdrop-filter: blur(12px);
@@ -917,6 +917,7 @@ small {
 .stage-heading {
   min-width: 0;
   max-width: 100%;
+  padding-right: 38px;
 }
 .scene-line {
   display: flex;
@@ -927,27 +928,53 @@ small {
 .stage-heading h1 {
   font-family: inherit;
   font-weight: 700;
-  font-size: var(--text-title);
+  font-size: var(--text-heading);
   line-height: 1.25;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.2px;
   min-width: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
-.stage-heading h1,
-.stage-heading p {
-  overflow-wrap: anywhere;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+.stage-heading h1 {
+  display: block;
   overflow: hidden;
 }
-.stage-heading p {
-  margin-top: 3px;
+.stage-heading .badge {
+  display: inline-flex;
+}
+.scene-information {
+  width: 100%;
+  padding: 0;
+  pointer-events: auto;
+}
+.scene-information > summary.icon-control {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  min-height: 32px;
+  padding: 0;
+}
+.scene-information[open] > summary {
+  background: var(--soft);
+  color: var(--accent-strong);
+}
+.scene-information-body {
+  max-height: min(180px, 30dvh);
+  overflow-y: auto;
+  padding-top: 4px;
+  overscroll-behavior: contain;
+}
+.scene-information-body p {
+  margin: 0;
+  overflow-wrap: anywhere;
   color: #585866;
   font-size: var(--text-control);
-  -webkit-line-clamp: 1;
 }
-.stage-heading .source-note {
-  margin-top: 1px;
+.scene-information-body .source-note {
+  margin-top: 4px;
   font-size: var(--text-caption);
   color: var(--muted);
 }
@@ -1108,6 +1135,7 @@ small {
   font-size: var(--text-caption);
   color: #5f6360;
   pointer-events: auto;
+  padding-right: 38px;
 }
 #status {
   line-height: 1.5;
@@ -1362,7 +1390,7 @@ textarea {
   position: fixed;
   inset: auto;
   margin: 0;
-  padding: 4px 6px 6px;
+  padding: 0 6px 6px;
   border: 0;
   border-radius: 12px;
   background: var(--surface);
@@ -1979,7 +2007,7 @@ dialog .buttons {
     gap: 10px;
   }
   .stage-heading h1 {
-    font-size: var(--text-title);
+    font-size: var(--text-heading);
   }
 }
 @media (max-width: 900px) {
@@ -2063,16 +2091,26 @@ dialog .buttons {
     top: 12px;
     right: auto;
     max-width: calc(100% - 24px);
-    gap: var(--space-1);
+    gap: 2px;
   }
   .stage-bottom {
     bottom: var(--space-2);
   }
   .stage-heading h1 {
-    font-size: var(--text-title);
+    font-size: var(--text-heading);
   }
-  .stage-heading p {
+  .scene-information-body p {
     font-size: var(--text-caption);
+  }
+  .scene-information > summary.icon-control {
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    min-height: 40px;
+  }
+  .stage-heading,
+  .stage-status {
+    padding-right: 46px;
   }
   .mobile-nav {
     display: flex;
@@ -2232,12 +2270,11 @@ dialog .buttons {
   .catalog-list {
     flex: 0 0 220px;
   }
-  .stage-heading p,
   .camera-hint {
     display: none;
   }
   .stage-heading h1 {
-    font-size: 17px;
+    font-size: var(--text-heading);
   }
 }
 .ui-icon {
@@ -2516,8 +2553,8 @@ summary.icon-control::before {
   display: flex;
   align-items: center;
   gap: 8px;
-  min-height: 36px;
-  padding: 6px 10px;
+  min-height: 40px;
+  padding: 10px 10px 6px;
   margin-bottom: 4px;
   background: var(--surface);
   color: var(--muted);

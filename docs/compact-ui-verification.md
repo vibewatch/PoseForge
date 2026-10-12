@@ -18,6 +18,12 @@ and accented hover/keyboard-focus states. `panel-design.spec.js` checks their
 alignment, visible boundaries, narrow-screen fit and keyboard filtering at
 1440-, 390- and 320-pixel widths without changing the active scene.
 
+The custom-menu regression also checks that sticky headings meet the menu's
+top edge during keyboard/wheel scrolling and own hit-testing in that former
+gap. Scene-information coverage requires a collapsed HUD no taller than
+60 pixels at desktop, narrow-phone and short-landscape sizes, checks keyboard
+disclosure/Escape, visible status/quality feedback, and source details/actions.
+
 `custom-hints.spec.js` checks exact panel bounds at 1080/1440/1600 pixels,
 icon-dock bounds and 40-pixel touch targets at 320/390/481/520/844 pixels,
 hover transfer, focus/Escape, disabled actions, live title migration,

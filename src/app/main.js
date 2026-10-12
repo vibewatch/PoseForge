@@ -49,6 +49,13 @@ localizeDocument();
 const removeIcons = bindIcons();
 const removeCustomHints = bindCustomHints();
 const removeCustomSelects = bindCustomSelects();
+$("scene-information").addEventListener("keydown", (event) => {
+  if (event.key !== "Escape" || !$("scene-information").open) return;
+  event.preventDefault();
+  event.stopPropagation();
+  $("scene-information").open = false;
+  $("scene-information-toggle").focus({ preventScroll: true });
+});
 // The switch names the language it switches to, in that language.
 $("language").textContent = language === "zh" ? "EN" : "中文";
 $("language").lang = language === "zh" ? "en" : "zh-CN";

@@ -103,6 +103,7 @@ const controls = [
   ["#position-edit", "edit", "Edit posture"],
   ["#position-save", "save", "Save position override"],
   ["#show-notes", "checks", "Pose checks"],
+  ["#scene-information-toggle", "info", "Scene information"],
   [".dialog-head .icon-button", "close", "Close dialog"],
   [".actor-card > .text-button.danger", "trash", "Remove figure"],
   [".favorite", "favorite", "Favorites"],

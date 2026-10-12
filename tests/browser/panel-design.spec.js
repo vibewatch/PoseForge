@@ -151,6 +151,59 @@ test("category names align left and expanded position tags have visible interact
   }
 });
 
+test("scene information stays compact and reveals full details without hiding status or actions", async ({ page }, info) => {
+  const information = page.locator("#scene-information");
+  const toggle = page.getByRole("button", { name: "Scene information", exact: true });
+  for (const [width, height] of [[1440, 1000], [390, 844], [320, 700], [844, 390]]) {
+    await page.setViewportSize({ width, height });
+    if (width <= 900) await page.locator('[data-region="studio"]').click();
+    await expect(information).not.toHaveAttribute("open", "");
+    await expect(page.locator("#scene-title")).toBeVisible();
+    await expect(page.locator("#scene-badge")).toBeVisible();
+    await expect(page.locator("#status")).toContainText("Ready");
+    await expect(page.locator("#scene-description")).toBeHidden();
+    const compact = await page.locator(".stage-top").boundingBox();
+    expect(compact.height).toBeLessThanOrEqual(60);
+    const button = await toggle.boundingBox();
+    expect(button.x + button.width).toBeLessThanOrEqual(compact.x + compact.width);
+    expect(button.y + button.height).toBeLessThanOrEqual(compact.y + compact.height);
+    if (width <= 900) {
+      expect(button.width).toBeGreaterThanOrEqual(40);
+      expect(button.height).toBeGreaterThanOrEqual(40);
+    }
+    await screenshot(page, info, `compact-scene-information-${width}.png`);
+    await toggle.click();
+    await expect(information).toHaveAttribute("open", "");
+    await expect(page.locator("#scene-description")).toBeVisible();
+    await expect(page.getByRole("dialog")).toHaveCount(0);
+    await expect(page.locator("#status")).toBeVisible();
+    await audit(page);
+    await screenshot(page, info, `expanded-scene-information-${width}.png`);
+    await toggle.focus();
+    await page.keyboard.press("Escape");
+    await expect(information).not.toHaveAttribute("open", "");
+    await expect(toggle).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(page.locator("#scene-description")).toBeVisible();
+    await page.keyboard.press("Space");
+    await expect(page.locator("#scene-description")).toBeHidden();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+  }
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.getByLabel("Search positions", { exact: true }).fill("kneeling-missionary");
+  await page.getByRole("button", { name: "Position details kneeling-missionary", exact: true }).click();
+  await page.getByRole("button", { name: "Associate current study with this source", exact: true }).click();
+  await expect(page.locator("#position-actions")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Edit posture", exact: true })).toBeVisible();
+  await expect(page.locator("#scene-source")).toBeHidden();
+  await toggle.click();
+  await expect(page.locator("#scene-source")).toContainText("not a verified reconstruction");
+  await expect(page.locator("#scene-source")).toBeVisible();
+  await page.getByRole("button", { name: "Edit posture", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Figures", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await audit(page);
+});
+
 test("panel components share a visual hierarchy while disclosures and figure controls retain their behavior", async ({ page }, info) => {
   await expect(page.locator("#scene-controls > .panel-section")).toHaveCount(3);
   await expect(page.locator("#scene-controls > .panel-section .panel-section-heading > h2 > .ui-icon")).toHaveCount(3);

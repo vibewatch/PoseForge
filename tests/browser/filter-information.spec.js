@@ -78,11 +78,22 @@ test("choice menus keep their heading and highlight visible without scrolling th
       await expect(menu.locator(".select-menu-heading")).toBeInViewport({ ratio: 1 });
       await expect(menu.locator(".highlighted")).toBeInViewport({ ratio: 1 });
       const headingBox = await menu.locator(".select-menu-heading").boundingBox();
+      const menuBox = await menu.boundingBox();
+      expect(Math.abs(headingBox.y - menuBox.y)).toBeLessThan(0.5);
       const highlightedBox = await menu.locator(".highlighted").boundingBox();
       expect(highlightedBox.y).toBeGreaterThanOrEqual(headingBox.y + headingBox.height);
       expect(await page.evaluate(() =>
         ["#library", ".library-top"].map((selector) => document.querySelector(selector).scrollTop))).toEqual(scroll);
     }
+    await menu.hover();
+    await page.mouse.wheel(0, 120);
+    await expect.poll(() => menu.evaluate((node) => {
+      const box = node.getBoundingClientRect();
+      const heading = node.querySelector(".select-menu-heading");
+      return Math.abs(heading.getBoundingClientRect().top - box.top) < 0.5 &&
+        document.elementFromPoint(box.left + 24, box.top + 2)
+          ?.closest(".select-menu-heading") === heading;
+    })).toBe(true);
     await expect(menu.locator(".select-menu-heading")).toHaveText("Category");
     await audit(page);
     await snapshot(page, info, `filter-menu-${width}.png`);

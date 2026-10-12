@@ -151,6 +151,9 @@ Open drawers are square, flush with the window edges and extend from the header
 to the bottom of the available area; catalog rows have no outer rounding or gutter.
 The header and scene information use a quiet translucent backing so text stays
 readable against dark or detailed settings.
+The scene HUD keeps its title, quality badge and live status compact; its
+information icon expands the description and source inline, and Escape
+collapses them. Pose checks and source-editing actions remain available.
 **Edit posture** or a new study opens the editor. **Display** unfolds the
 setting and material controls above the camera toolbar; Escape or clicking
 outside closes it. Smaller screens keep **Library / Studio / Edit** one tap
@@ -159,7 +162,7 @@ away, with a 44-pixel bottom navigation bar.
 The workspace uses a borderless, neutral surface hierarchy, 4/8/12-pixel spacing
 and bundled **Manrope** typography with system Chinese sans-serif fallbacks:
 11-pixel captions, 12-pixel controls and compact inspector headings,
-13-pixel body text, 14-pixel section headings and 18-pixel scene titles, with
+13-pixel body text, 14-pixel section/scene headings and 18-pixel branding, with
 500/600/700 weights. Dropdowns and primary touch controls retain at least
 40-pixel height.
 The camera dock, mobile navigation and panel actions use consistent line icons

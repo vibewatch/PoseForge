@@ -59,6 +59,7 @@ const ui = {
   "Scene inspector": "场景检查器",
   "Placement help": "位置帮助",
   "Information about {label}": "关于{label}的信息",
+  "Scene information": "姿势信息",
   "Active filters": "已应用的筛选条件",
   "Remove {label} filter: {value}": "移除{label}筛选条件：{value}",
   Workspace: "工作区",
