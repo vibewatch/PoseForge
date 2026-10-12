@@ -208,6 +208,12 @@ export function bindCustomHints(root = document.body) {
       event.preventDefault();
       event.stopImmediatePropagation();
       suppress = null;
+    } else if (event.target.closest?.(".information-button")) {
+      const target = candidate(event.target);
+      if (target) {
+        dismissed = null;
+        show(target);
+      }
     } else if (!tooltip.contains(event.target)) hide();
   });
   listen(doc, "contextmenu", (event) => {

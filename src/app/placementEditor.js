@@ -5,6 +5,7 @@ import {
   isFixedPlacement,
 } from "../core/placement.js";
 import { newId } from "./ids.js";
+import { createInformationHint } from "./icons.js";
 import { message, t } from "../i18n/index.js";
 
 const el = (tag, props = {}, children = []) => {
@@ -41,12 +42,12 @@ export function createPlacementEditor(getActor, changed) {
   capture.dataset.icon = "capture";
   guide.dataset.icon = "guide";
   reset.dataset.icon = "reset";
-  const hint = el("p", {
-    className: "hint",
-    textContent: t(
+  const hint = createInformationHint(t("Placement"),
+    t(
       "World position and XYZ rotation. Authored placement sets the initial position and facing. Fixed placement stays there; guided placement may adjust. Capture fixes all joint angles too; a solved-pose guide leaves them guided. Reset placement to use the arrangement again, and reset joints separately. Contacts and support are still checked. Use Fit view if needed.",
     ),
-  });
+  );
+  hint.classList.add("placement-help");
   const feedback = el("p", { className: "hint" });
   feedback.setAttribute("role", "alert");
   const output = el("output", { className: "hint solved-placement" });
@@ -171,14 +172,12 @@ export function createPlacementEditor(getActor, changed) {
     feedbackKind = null;
     changed();
   });
-  const help = el("summary", { textContent: t("Placement help") });
-  help.dataset.icon = "info";
   const body = el("div", { className: "placement-editor" }, [
     el("label", { className: "toggle" }, [
       fixed,
       el("span", { textContent: t("Keep placement") }),
     ]),
-    el("details", { className: "placement-help" }, [help, hint]),
+    hint,
     el("div", { className: "placement-fields" }, fields.map(({ field }) => field)),
     output,
     el("div", { className: "buttons" }, [capture, guide, reset]),

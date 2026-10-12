@@ -125,11 +125,9 @@ for (const id of ["cowgirl", "reverse_cowgirl"]) {
     await expect(page.getByLabel("Facing", { exact: true })).toHaveValue(
       id === "cowgirl" ? "as written" : "away",
     );
-    await expect(
-      page.getByText("2 figures use guided starting placement.", {
-        exact: false,
-      }),
-    ).toBeVisible();
+    const information = page.getByRole("button", { name: "Information about Composition", exact: true });
+    await expect(information).toBeVisible();
+    await expect(information).toHaveAttribute("data-hint", /2 figures use guided starting placement\./);
     await expect(page.getByLabel("Contact type")).toHaveCount(2);
     for (const row of await page.locator(".contact-card").all())
       await expect(row.getByLabel("Contact type")).toHaveValue("support");
@@ -223,9 +221,8 @@ for (const id of ["cowgirl", "reverse_cowgirl"]) {
     page.on("pageerror", (error) => errors.push(error.message));
     await page.goto(`/?preset=builtin.named.${id}`);
     await ready(page);
-    const hint = page.getByText("2 figures use guided starting placement.", {
-      exact: false,
-    });
+    const hint = page.getByRole("button", { name: "Information about Composition", exact: true });
+    await expect(hint).toHaveAttribute("data-hint", /2 figures use guided starting placement\./);
     await expect(hint).toBeVisible();
     await apply(page, `${phrase}, he is tall`);
     await expect(hint).not.toBeVisible();

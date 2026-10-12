@@ -47,6 +47,7 @@ import { FOOT_SHAPE_NAMES } from "../core/footPose.js";
 import { newId } from "./ids.js";
 import { createContactEditor } from "./contactEditor.js";
 import { createPlacementEditor } from "./placementEditor.js";
+import { createInformationHint, setInformationHint } from "./icons.js";
 import { captureSolvedPose, isFixedPlacement } from "../core/placement.js";
 import { message, t, term } from "../i18n/index.js";
 
@@ -62,8 +63,15 @@ const el = (tag, props = {}, children = []) => {
   return node;
 };
 
-const section = (title, body) =>
-  el("section", {}, [el("h2", { textContent: title }), body]);
+const section = (title, body, information = null) =>
+  el("section", {}, [
+    information
+      ? el("div", { className: "panel-section-heading" }, [
+          el("h2", { textContent: title }), information,
+        ])
+      : el("h2", { textContent: title }),
+    body,
+  ]);
 
 /** A labelled <select>. */
 function picker(label, options, { blank = null, labels = {} } = {}) {
@@ -386,7 +394,7 @@ export function buildPanel(root, handlers) {
       away: t("away"),
     },
   });
-  const placementHint = el("p", { className: "hint", hidden: true });
+  const placementHint = createInformationHint(t("Composition"), "");
   const actorHost = el("div");
   const contactEditor = createContactEditor((next) => {
     scene = next;
@@ -396,11 +404,10 @@ export function buildPanel(root, handlers) {
     arrangement.field,
     surface.field,
     facing.field,
-    placementHint,
   ]);
   overrides.className = "composition-fields";
   scenePane.append(
-    section(t("Composition"), overrides),
+    section(t("Composition"), overrides, placementHint),
     contactEditor.root,
     interpretation.details,
     diagnostics.details,
@@ -549,12 +556,11 @@ export function buildPanel(root, handlers) {
       fixed,
       el("span", { textContent: t("Keep edited angles") }),
     ]);
-    const modeHint = el("p", {
-      className: "hint",
-      textContent: t(
+    const modeHint = createInformationHint(t("Keep edited angles"),
+      t(
         "Keeps specified angle channels fixed. Other joints and placement may still adjust; contacts can remain unresolved.",
       ),
-    });
+    );
     const solvedOutput = el("output", {
       className: "hint solved-joints",
     });
@@ -664,8 +670,7 @@ export function buildPanel(root, handlers) {
     });
 
     const body = el("div", {}, [
-      mode,
-      modeHint,
+      el("div", { className: "information-row" }, [mode, modeHint]),
       bone.field,
       ...channels.map(({ control }) => control.field),
       solvedOutput,
@@ -764,15 +769,15 @@ export function buildPanel(root, handlers) {
       // figure, kept by the page rather than the scene, and while it is on
       // the figure's own clothes are kept but not worn.
       const suited = el("input", { type: "checkbox" });
-      const suitedHint = el("p", { className: "hint" });
+      const suitedHint = createInformationHint(t("Dress for the setting"), "");
       const suitedField = el("div", { className: "field dress-code", hidden: true }, [
         el("div", { className: "toggles" }, [
           el("label", { className: "toggle" }, [
             suited,
             el("span", { textContent: t("Dress for the setting") }),
           ]),
+          suitedHint,
         ]),
-        suitedHint,
       ]);
       suited.addEventListener("change", () => handlers.onDress?.(suited.checked));
       const look = group(t("Appearance"));
@@ -989,7 +994,7 @@ export function buildPanel(root, handlers) {
     for (const control of actorControls) {
       control.suitedField.hidden = dressCode.code == null;
       control.suited.checked = dressCode.on;
-      control.suitedHint.textContent = DRESS_HINTS[dressCode.code] ?? "";
+      setInformationHint(control.suitedHint, DRESS_HINTS[dressCode.code] ?? "");
       for (const { select } of [control.dress, control.top, control.bottom, control.outfit])
         select.disabled = dressed;
       for (const box of control.extras.boxes.values()) box.disabled = dressed;
@@ -1114,8 +1119,7 @@ export function buildPanel(root, handlers) {
       const guidedPlacements = scene.actors.filter(
         (actor) => actor.placement?.mode === "guided",
       ).length;
-      placementHint.hidden = fixedPlacements + guidedPlacements === 0;
-      placementHint.textContent = [
+      setInformationHint(placementHint, [
         fixedPlacements
           ? fixedPlacements === 1
             ? t("1 figure keeps fixed placement. Change Placement in Figures to allow arrangement and facing adjustments.")
@@ -1128,7 +1132,7 @@ export function buildPanel(root, handlers) {
           : "",
       ]
         .filter(Boolean)
-        .join(" ");
+        .join(" "));
       surface.select.value = scene.support?.surface ?? "floor";
       const yaw = scene.relationship?.yaw;
       facing.select.value =

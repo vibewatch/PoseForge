@@ -89,12 +89,12 @@ test("grouped figure actions, removal and placement icons preserve authoring and
   await ready(page);
   await expect(page.locator(".actor-card")).toHaveCount(1);
   await page.getByText("Placement", { exact: true }).click();
-  const help = page.locator(".placement-help > summary");
+  const help = page.locator(".placement-help");
   await iconOnly(help);
-  await expect(page.locator(".placement-help > .hint")).toBeHidden();
   await help.click();
-  await expect(page.locator(".placement-help > .hint")).toBeVisible();
-  await help.click();
+  await expect(page.getByRole("tooltip")).toContainText("World position and XYZ rotation.");
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("tooltip")).toBeHidden();
   const fields = await page.locator(".placement-fields > .field").all();
   const firstRow = await Promise.all(fields.slice(0, 3).map((field) => field.boundingBox()));
   expect(new Set(firstRow.map((box) => box.y)).size).toBe(1);

@@ -132,11 +132,9 @@ test("the kneeling pair retains six supports and three contacts on bed and floor
   await expect(
     page.getByRole("button", { name: "Side", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
-  await expect(
-    page.getByText("2 figures use guided starting placement.", {
-      exact: false,
-    }),
-  ).toBeVisible();
+  const information = page.getByRole("button", { name: "Information about Composition", exact: true });
+  await expect(information).toBeVisible();
+  await expect(information).toHaveAttribute("data-hint", /2 figures use guided starting placement\./);
   await page.screenshot({ path: info.outputPath("kneeling-pair-bed.png") });
   await apply(page, "doggy style on the floor");
   await expect(page.getByLabel("Surface", { exact: true })).toHaveValue(
@@ -202,9 +200,8 @@ test("the kneeling calibration respects explicit height, facing and unsupported-
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/?preset=builtin.named.doggy_style");
   await ready(page);
-  const hint = page.getByText("2 figures use guided starting placement.", {
-    exact: false,
-  });
+  const hint = page.getByRole("button", { name: "Information about Composition", exact: true });
+  await expect(hint).toHaveAttribute("data-hint", /2 figures use guided starting placement\./);
   await expect(hint).toBeVisible();
   await apply(page, "doggy style, he is tall");
   await expect(hint).not.toBeVisible();

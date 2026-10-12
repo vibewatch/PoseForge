@@ -110,6 +110,8 @@ test("position categories, statuses and mobile controls remain accessible", asyn
   await expect(
     page.locator(".position-category").filter({ hasText: "Partner on top" }),
   ).toHaveCount(1);
+  await openLibraryFilters(page);
+  await expect(page.locator(".position-browser")).not.toHaveAttribute("open", "");
   await page.getByLabel("Support status").selectOption("verified-3d");
   await expect(page.locator(".preset-card")).toHaveCount(23);
   await page.getByLabel("Support status").selectOption("all");

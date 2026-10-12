@@ -39,10 +39,12 @@ storage schema or solver changes.
   label and source identity. Keep the 24-card page bound and lazy preview work.
 - Keep transfer actions and pagination visible in a slimmer library footer.
   Explain stock-vs-reference counts and browser storage in an accessible library
-  information dialog instead of repeating long text above every collection.
+  information icon with a custom hint and detailed dialog instead of repeating
+  long text above every collection.
 - Tighten inspector spacing, use a persistent Scene/Figures tab header, and
   shorten descriptive chrome. Keep essential controls visible. Move explanatory
-  contact prose into Contact help; never collapse or hide warnings/results.
+  contact, placement and other explanatory prose into information-icon hints;
+  never collapse or hide warnings/results.
 - Add a desktop Focus view toggle to hide both sidebars and enlarge the canvas.
   It does not edit the scene. Escape restores the workspace; search exits focus.
   Narrow screens use the existing Library / Studio / Edit navigation, with

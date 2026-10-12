@@ -118,6 +118,20 @@ export function setControlIcon(control, icon, label =
   control.replaceChildren(createIcon(icon));
 }
 
+export function setInformationHint(button, text) {
+  button.dataset.hint = text;
+  button.hidden = !text.trim();
+}
+
+export function createInformationHint(label, text) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "icon-button information-button";
+  setControlIcon(button, "info", t("Information about {label}", { label }));
+  setInformationHint(button, text);
+  return button;
+}
+
 export function bindIcons(root = document.body) {
   const enhanced = new WeakSet();
   const enhance = (node) => {

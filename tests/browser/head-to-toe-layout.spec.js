@@ -122,11 +122,9 @@ test("the head-to-toe pair retains guided placement and both original contacts o
   await expect(
     page.getByRole("button", { name: "Side", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
-  await expect(
-    page.getByText("2 figures use guided starting placement.", {
-      exact: false,
-    }),
-  ).toBeVisible();
+  const information = page.getByRole("button", { name: "Information about Composition", exact: true });
+  await expect(information).toBeVisible();
+  await expect(information).toHaveAttribute("data-hint", /2 figures use guided starting placement\./);
   await page.screenshot({ path: info.outputPath("head-to-toe-bed.png") });
   await apply(page, "sixty nine on the floor");
   await expect(page.getByLabel("Surface", { exact: true })).toHaveValue(
@@ -192,9 +190,8 @@ test("the head-to-toe calibration respects explicit height, facing and unsupport
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/?preset=builtin.named.sixty_nine");
   await ready(page);
-  const hint = page.getByText("2 figures use guided starting placement.", {
-    exact: false,
-  });
+  const hint = page.getByRole("button", { name: "Information about Composition", exact: true });
+  await expect(hint).toHaveAttribute("data-hint", /2 figures use guided starting placement\./);
   await expect(hint).toBeVisible();
   await apply(page, "sixty nine, he is tall");
   await expect(hint).not.toBeVisible();

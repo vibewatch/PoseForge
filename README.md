@@ -169,8 +169,12 @@ tile and purple accent. Search, field labels, content names and quality warnings
 remain text; actions use icons instead of competing with that content.
 Description examples and Apply share one action row; figure capture/add actions
 sit above the figures and removal sits beside each figure heading.
-Composition fields are paired, placement coordinates form XYZ rows, and longer
-placement help unfolds on demand. Mobile history sits beside the editor tabs
+Composition fields are paired and placement coordinates form XYZ rows.
+Explanatory panel text lives behind small information icons beside its section
+or control; hover, focus or a normal tap reveals a custom hint. Contact guidance,
+fixed/guided placement notices and setting dress-code hints follow the current
+scene. Measurements, warnings and errors remain visible.
+Mobile history sits beside the editor tabs
 rather than adding a second toolbar row.
 Custom hints replace native browser
 tooltips throughout static and dynamically generated UI: hover or keyboard focus
@@ -186,7 +190,11 @@ choice; Enter or Space commits it, while Escape, Tab or clicking outside
 cancels without editing the scene. Menus open above clipped drawers and dialogs,
 stay inside the viewport, skip disabled choices and follow programmatic changes
 such as undo/redo. Native select elements retain labels, form values and scene
-bindings but do not display system menus. The library keeps search
+bindings but do not display system menus. Menus have a quiet sticky heading,
+soft selected rows and a checkmark, with scrolling confined to the menu.
+Library filters use full-width rows so longer category/status names remain
+readable. Filters and category browsing open one at a time without resetting
+applied filters. The library keeps search
 beside **Filters**, and provides a collapsible category browser plus
 active-filter counts and one-click reset. Library entries are short rows with
 visible quality labels; favorite and details actions appear on hover or focus

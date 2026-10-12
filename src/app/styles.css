@@ -376,7 +376,7 @@ small {
 }
 .catalog-filters {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-2);
   padding: var(--space-2) 0 var(--space-1);
 }
@@ -1235,12 +1235,12 @@ textarea {
   position: fixed;
   inset: auto;
   margin: 0;
-  padding: var(--space-1);
+  padding: 4px 6px 6px;
   border: 0;
-  border-radius: var(--radius);
+  border-radius: 12px;
   background: var(--surface);
   color: var(--ink);
-  box-shadow: 0 8px 32px #20202a24;
+  box-shadow: 0 12px 36px #20202a1c, 0 2px 6px #20202a0a;
   overflow: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
@@ -1251,14 +1251,14 @@ textarea {
 }
 .select-option {
   position: relative;
-  padding: 6px 28px 6px 8px;
-  min-height: 32px;
-  border-radius: 5px;
+  padding: 9px 32px 9px 10px;
+  min-height: 36px;
+  border-radius: 7px;
   overflow-wrap: anywhere;
   cursor: pointer;
 }
 .select-option.highlighted {
-  background: var(--surface-muted);
+  background: #f3f2fa;
 }
 .select-option[aria-selected="true"] {
   background: var(--soft);
@@ -1269,7 +1269,7 @@ textarea {
   content: "";
   position: absolute;
   right: 10px;
-  top: 12px;
+  top: calc(50% - 6px);
   width: 5px;
   height: 9px;
   border-right: 1.5px solid currentColor;
@@ -1277,7 +1277,8 @@ textarea {
   transform: rotate(45deg);
 }
 .select-option[aria-disabled="true"] {
-  opacity: 0.45;
+  color: var(--muted);
+  opacity: 1;
   cursor: not-allowed;
 }
 input[type="range"] {
@@ -2001,9 +2002,10 @@ summary.icon-control::before {
   border-radius: 6px;
   padding: 6px 8px;
   max-width: min(300px, calc(100vw - 16px));
-  max-height: calc(100dvh - 16px);
+  max-height: min(360px, calc(100dvh - 16px));
   overflow: auto;
   overflow-wrap: anywhere;
+  white-space: pre-line;
   background: #262631;
   color: #fff;
   font-family: inherit;
@@ -2099,19 +2101,22 @@ summary.icon-control::before {
   margin-right: auto;
 }
 .inspector-pane section > h2,
+.panel-section-heading > h2,
 .figure-actions h2 {
   font-size: var(--text-control);
   font-weight: 700;
   letter-spacing: 0.1px;
   line-height: 1.5;
 }
-.inspector-pane section > h2 {
+.inspector-pane section > h2,
+.panel-section-heading > h2 {
   display: flex;
   align-items: center;
   gap: 6px;
   margin-bottom: var(--space-2);
 }
-.inspector-pane section > h2::before {
+.inspector-pane section > h2::before,
+.panel-section-heading > h2::before {
   content: "";
   width: 3px;
   height: 12px;
@@ -2196,16 +2201,10 @@ summary.icon-control::before {
   min-height: 32px;
   padding-right: 40px;
 }
-.placement-help {
-  padding: 0;
-}
-.placement-help > summary.icon-control {
+.placement-help.information-button {
   position: absolute;
   top: 0;
   right: 0;
-}
-.placement-help > .hint {
-  margin: var(--space-2) 0;
 }
 .placement-fields {
   display: grid;
@@ -2238,4 +2237,65 @@ summary.icon-control::before {
   .preset-card:has(.position-details) .preset-select {
     min-height: 76px;
   }
+}
+.select-menu-heading {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 6px 10px;
+  margin-bottom: 4px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+.select-menu-heading .ui-icon {
+  width: 14px;
+  height: 14px;
+}
+.filter-menu .select-option {
+  margin-bottom: 2px;
+}
+.filter-menu .select-option:last-child {
+  margin-bottom: 0;
+}
+.catalog-filters .category-field {
+  gap: 4px;
+}
+.catalog-filters .custom-select {
+  background: #f5f4fa;
+}
+.catalog-filters .category-field label {
+  font-weight: 600;
+}
+.panel-section-heading,
+.information-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.panel-section-heading > h2 {
+  margin: 0;
+}
+.panel-section-heading {
+  margin-bottom: var(--space-1);
+}
+.information-button {
+  color: var(--muted);
+  background: transparent;
+}
+.information-button:hover,
+.information-button:focus-visible {
+  color: var(--accent-strong);
+  background: var(--soft);
+}
+.information-button .ui-icon {
+  width: 16px;
+  height: 16px;
 }

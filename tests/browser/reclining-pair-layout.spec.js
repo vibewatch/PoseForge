@@ -116,14 +116,10 @@ test("the reclining pair retains mixed placement and its original contact on bed
   await expect(
     page.getByRole("button", { name: "Side", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
-  await expect(
-    page.getByText("1 figure uses guided starting placement.", {
-      exact: false,
-    }),
-  ).toBeVisible();
-  await expect(
-    page.getByText("1 figure keeps fixed placement.", { exact: false }),
-  ).toBeVisible();
+  const information = page.getByRole("button", { name: "Information about Composition", exact: true });
+  await expect(information).toBeVisible();
+  await expect(information).toHaveAttribute("data-hint", /1 figure uses guided starting placement\./);
+  await expect(information).toHaveAttribute("data-hint", /1 figure keeps fixed placement\./);
   await page.screenshot({ path: info.outputPath("reclining-pair-bed.png") });
   await apply(page, "missionary on the floor");
   await expect(page.getByLabel("Surface", { exact: true })).toHaveValue(
@@ -189,9 +185,8 @@ test("the reclining calibration respects explicit height, facing and unsupported
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/?preset=builtin.named.missionary");
   await ready(page);
-  const hint = page.getByText("1 figure uses guided starting placement.", {
-    exact: false,
-  });
+  const hint = page.getByRole("button", { name: "Information about Composition", exact: true });
+  await expect(hint).toHaveAttribute("data-hint", /1 figure uses guided starting placement\./);
   await expect(hint).toBeVisible();
   await apply(page, "missionary, he is tall");
   await expect(hint).not.toBeVisible();

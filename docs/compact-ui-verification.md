@@ -166,3 +166,35 @@ are still metadata, not new verified 3D reconstructions. The earlier geometry
 and storage audits remain historical evidence; this is not a new full geometry
 audit or a physical-device/assistive-technology certification. No new dependency,
 external font, image-generation asset, cloud service or hosted deployment is added.
+
+## Filter menus and information icons
+
+The follow-up filter fix addresses two reproduced problems: long selected values
+were clipped by the two-column layout in the 248-pixel desktop drawer, and
+expanding categories alongside filters crowded the scrollable library header.
+Filters now use full-width rows; categories and filters disclose one at a time
+without clearing applied selections or their count. Category activation closes
+filters synchronously, without waiting for the native asynchronous toggle event.
+Long category/status values
+fit at 1440, 1080, 390 and 320-pixel viewport widths.
+
+Dropdowns share a sticky context heading, soft highlighted/selected rows,
+selection checks and quieter shadows. Keyboard highlighting scrolls only the
+menu, stays below the heading and leaves padding below the active option.
+Fractional option geometry is measured directly to avoid clipping at short
+viewport heights. The menus remain accessible above drawers/dialogs and fit
+320 × 390 screens when opening upwards.
+
+Composition, partner contacts, placement, joint mode and dress-code explanations
+use localized information buttons. Hover, focus and ordinary touch taps reveal
+custom hints; leaving the trigger/hint, Escape, scrolling or an outside action
+dismisses them. Enter/Space can explicitly reopen an information hint after
+Escape. Context updates follow scene state. The library information icon
+also exposes its explanatory text as a hint, retaining its detailed reading
+dialog. Measurements, solved values, quality status and alerts remain visible.
+
+The 24 focused browser scenarios include menu navigation/cancellation, disclosure
+exclusivity, unchanged filter values, touch/Chinese hints, authoring/history,
+flush drawer edges and phone/landscape layouts, with Axe checks on visible menus
+and information hints. The final 10-case regression batch passes without retries.
+Architecture and translation checks pass all 14 cases.

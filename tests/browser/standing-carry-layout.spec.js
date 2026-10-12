@@ -117,9 +117,9 @@ test("standing carry retains five close contacts and two foot supports through f
   await expect(
     page.getByRole("button", { name: "Side", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
-  await expect(
-    page.getByText("2 figures keep fixed placement.", { exact: false }),
-  ).toBeVisible();
+  const information = page.getByRole("button", { name: "Information about Composition", exact: true });
+  await expect(information).toBeVisible();
+  await expect(information).toHaveAttribute("data-hint", /2 figures keep fixed placement\./);
   await page.screenshot({ path: info.outputPath("standing-carry-floor.png") });
   await apply(page, "standing carry on the bed");
   const before = await clear(page, "bed");
@@ -182,9 +182,8 @@ test("standing carry preserves explicit taller, away and unsupported-surface req
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/?preset=builtin.named.standing_carry");
   await ready(page);
-  const hint = page.getByText("2 figures keep fixed placement.", {
-    exact: false,
-  });
+  const hint = page.getByRole("button", { name: "Information about Composition", exact: true });
+  await expect(hint).toHaveAttribute("data-hint", /2 figures keep fixed placement\./);
   await expect(hint).toBeVisible();
   await apply(page, "standing carry, he is tall");
   await expect(hint).not.toBeVisible();

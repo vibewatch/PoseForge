@@ -106,9 +106,9 @@ src/app/
   ui.js            description box, override controls, interpretation readout
   contactEditor.js figure/landmark contact editing and measured feedback
   studioUI.js      library, filters, dialogs and export choices
-  customSelect.js  shared top-layer choice menus; native labels/values stay bound
-  icons.js         shared SVGs, icon-only actions and navigation; names/handlers stay bound
-  customHints.js   shared hover/focus/touch hints; migrates live native titles
+  customSelect.js  headed top-layer menus with local scrolling; native labels/values stay bound
+  icons.js         shared SVGs, named icon actions/navigation and information-hint controls
+  customHints.js   shared hover/focus/touch hints; tap-to-read information and live title migration
   workspaceLayout.js remembered drawers, mobile regions and Display disclosure
   libraryStore.js  atomic browser persistence for saved presets/favorites
   diagram.js       schematic joint previews

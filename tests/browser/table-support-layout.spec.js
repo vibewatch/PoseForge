@@ -132,14 +132,10 @@ test("table support retains mixed placement, six supports and three contacts thr
   await expect(
     page.getByRole("button", { name: "Side", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
-  await expect(
-    page.getByText("1 figure keeps fixed placement.", { exact: false }),
-  ).toBeVisible();
-  await expect(
-    page.getByText("1 figure uses guided starting placement.", {
-      exact: false,
-    }),
-  ).toBeVisible();
+  const information = page.getByRole("button", { name: "Information about Composition", exact: true });
+  await expect(information).toBeVisible();
+  await expect(information).toHaveAttribute("data-hint", /1 figure keeps fixed placement\./);
+  await expect(information).toHaveAttribute("data-hint", /1 figure uses guided starting placement\./);
   await page.screenshot({ path: info.outputPath("table-supported-pair.png") });
   await page.locator("#save-preset").click();
   await page.getByLabel("Preset name").fill("Table support study");
@@ -198,30 +194,23 @@ test("table calibration preserves explicit body, facing and other-surface reques
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/?preset=builtin.named.bent_over_table");
   await ready(page);
-  const fixed = page.getByText("1 figure keeps fixed placement.", {
-    exact: false,
-  });
-  const guided = page.getByText("1 figure uses guided starting placement.", {
-    exact: false,
-  });
-  await expect(fixed).toBeVisible();
-  await expect(guided).toBeVisible();
+  const information = page.getByRole("button", { name: "Information about Composition", exact: true });
+  await expect(information).toHaveAttribute("data-hint", /1 figure keeps fixed placement\./);
+  await expect(information).toHaveAttribute("data-hint", /1 figure uses guided starting placement\./);
+  await expect(information).toBeVisible();
   await apply(page, "bent over the table, he is tall");
-  await expect(fixed).not.toBeVisible();
-  await expect(guided).not.toBeVisible();
+  await expect(information).not.toBeVisible();
   await page.getByRole("button", { name: "Figures", exact: true }).click();
   await expect(
     page.locator(".actor-card").nth(1).getByLabel("Height", { exact: true }),
   ).toHaveValue("1.85");
   await apply(page, "bent over the table, facing away");
   await expect(page.getByLabel("Facing", { exact: true })).toHaveValue("away");
-  await expect(fixed).not.toBeVisible();
-  await expect(guided).not.toBeVisible();
+  await expect(information).not.toBeVisible();
   await apply(page, "bent over the table on the floor");
   await expect(page.getByLabel("Surface", { exact: true })).toHaveValue(
     "floor",
   );
-  await expect(fixed).not.toBeVisible();
-  await expect(guided).not.toBeVisible();
+  await expect(information).not.toBeVisible();
   expect(errors).toEqual([]);
 });

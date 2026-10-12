@@ -1,4 +1,5 @@
 import { newId } from "./ids.js";
+import { createInformationHint, setInformationHint } from "./icons.js";
 import { message, t } from "../i18n/index.js";
 
 const POINTS = [
@@ -93,13 +94,13 @@ export function createContactEditor(onChange) {
     ["automatic", t("Arrangement + my contacts")],
     ["custom", t("My contacts only")],
   ]);
-  const help = node("p", { className: "hint" });
+  const explanation = [
+    t("Choose which parts should meet. A free limb may adjust on either side. Results measure visible surfaces when available; body-model estimates are labeled."),
+    t("Support contacts with nonzero pull let a hand hold a mounted figure's supporting knee or forearm off the surface. Rest and grip contacts keep the usual surface support."),
+  ].join("\n\n");
+  const information = createInformationHint(t("Partner contacts"), explanation);
   const defaults = node("ul", { className: "contact-defaults" });
   const host = node("div", { className: "contact-list" });
-  const empty = node("p", {
-    className: "hint",
-    textContent: t("No custom contacts yet. Add one to guide a hand or another body part."),
-  });
   const add = node("button", {
     type: "button",
     className: "action full",
@@ -110,26 +111,12 @@ export function createContactEditor(onChange) {
     "section",
     { className: "contact-editor", id: "contact-editor" },
     [
-      node("h2", { textContent: t("Partner contacts") }),
-      node("details", { className: "contact-help" }, [
-        node("summary", { textContent: t("Contact help") }),
-        node("p", {
-          className: "hint",
-          textContent: t(
-            "Choose which parts should meet. A free limb may adjust on either side. Results measure visible surfaces when available; body-model estimates are labeled.",
-          ),
-        }),
-        node("p", {
-          className: "hint",
-          textContent: t(
-            "Support contacts with nonzero pull let a hand hold a mounted figure's supporting knee or forearm off the surface. Rest and grip contacts keep the usual surface support.",
-          ),
-        }),
+      node("div", { className: "panel-section-heading" }, [
+        node("h2", { textContent: t("Partner contacts") }),
+        information,
       ]),
       mode.field,
-      help,
       defaults,
-      empty,
       host,
       add,
     ],
@@ -273,13 +260,19 @@ export function createContactEditor(onChange) {
       mode.select.disabled = scene.actors.length < 2;
       add.disabled =
         scene.actors.length < 2 || (scene.contacts?.length ?? 0) >= 32;
-      empty.hidden = !!scene.contacts?.length;
-      help.textContent =
+      const context =
         scene.actors.length < 2
           ? t("Add a second figure in Figures to make a partner contact.")
           : mode.select.value === "custom"
             ? t("Only the contacts below influence the pose. An empty list keeps the figures independent.")
             : t("The arrangement supplies its own contacts. Your contacts below are added to them.");
+      setInformationHint(information, [
+        context,
+        ...(scene.contacts?.length ? [] : [
+          t("No custom contacts yet. Add one to guide a hand or another body part."),
+        ]),
+        explanation,
+      ].join("\n\n"));
       defaults.hidden =
         mode.select.value === "custom" || scene.actors.length < 2;
       defaults.replaceChildren();

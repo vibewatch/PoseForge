@@ -1,4 +1,5 @@
 import { t } from "../i18n/index.js";
+import { createIcon } from "./icons.js";
 
 /** Keep native form semantics and scene bindings, but own the visible menu. */
 export function bindCustomSelects(root = document.body) {
@@ -20,6 +21,7 @@ export function bindCustomSelects(root = document.body) {
     caret.setAttribute("aria-hidden", "true");
     const menu = document.createElement("div");
     menu.className = "select-menu";
+    menu.classList.toggle("filter-menu", Boolean(select.closest("#catalog-filters")));
     menu.id = `select-menu-${++sequence}`;
     menu.setAttribute("role", "listbox");
     menu.setAttribute("popover", "manual");
@@ -53,7 +55,16 @@ export function bindCustomSelects(root = document.body) {
       if (items[index]) {
         select.setAttribute("aria-activedescendant", items[index].id);
         menu.setAttribute("aria-activedescendant", items[index].id);
-        items[index].scrollIntoView({ block: "nearest" });
+        const item = items[index];
+        const box = menu.getBoundingClientRect();
+        const itemBox = item.getBoundingClientRect();
+        const heading = menu.querySelector(".select-menu-heading");
+        const top = (heading?.getBoundingClientRect().bottom ?? box.top) + 4;
+        const bottom = box.bottom - 6;
+        if (itemBox.top < top)
+          menu.scrollTop -= Math.ceil(top - itemBox.top);
+        else if (itemBox.bottom > bottom)
+          menu.scrollTop += Math.ceil(itemBox.bottom - bottom);
       } else {
         select.removeAttribute("aria-activedescendant");
         menu.removeAttribute("aria-activedescendant");
@@ -62,19 +73,35 @@ export function bindCustomSelects(root = document.body) {
     function position() {
       const box = wrapper.getBoundingClientRect();
       const margin = 8;
-      const width = Math.min(Math.max(box.width, 200), innerWidth - margin * 2);
-      const below = innerHeight - box.bottom - margin;
-      const above = box.top - margin;
+      const viewport = window.visualViewport;
+      const left = viewport?.offsetLeft || 0;
+      const top = viewport?.offsetTop || 0;
+      const viewportWidth = viewport?.width || innerWidth;
+      const viewportHeight = viewport?.height || innerHeight;
+      const width = Math.min(Math.max(box.width, menu.classList.contains("filter-menu") ? 240 : 208),
+        viewportWidth - margin * 2);
+      const below = top + viewportHeight - box.bottom - margin;
+      const above = box.top - top - margin;
       const upwards = below < Math.min(menu.scrollHeight, 240) && above > below;
       menu.style.width = `${width}px`;
-      menu.style.maxHeight = `${Math.max(0, Math.min(280, (upwards ? above : below) - 4))}px`;
-      menu.style.left = `${Math.max(margin, Math.min(box.left, innerWidth - width - margin))}px`;
-      menu.style.top = upwards ? "auto" : `${box.bottom + 4}px`;
-      menu.style.bottom = upwards ? `${innerHeight - box.top + 4}px` : "auto";
+      menu.style.maxHeight = `${Math.max(0, Math.min(320, (upwards ? above : below) - 6))}px`;
+      menu.style.left = `${Math.max(left + margin,
+        Math.min(box.left, left + viewportWidth - width - margin))}px`;
+      menu.style.top = upwards
+        ? `${Math.max(top + margin, box.top - menu.offsetHeight - 6)}px`
+        : `${box.bottom + 6}px`;
+      menu.style.bottom = "auto";
     }
     function renderOptions() {
       const name = label();
       if (name) menu.setAttribute("aria-label", t("Options for {label}", { label: name }));
+      const heading = document.createElement("div");
+      heading.className = "select-menu-heading";
+      heading.setAttribute("aria-hidden", "true");
+      heading.append(
+        createIcon(menu.classList.contains("filter-menu") ? "filter" : "edit"),
+        document.createTextNode(name || ""),
+      );
       items = [...select.options].map((option, index) => {
         const item = document.createElement("div");
         item.id = `${menu.id}-${index}`;
@@ -90,7 +117,7 @@ export function bindCustomSelects(root = document.body) {
         item.addEventListener("click", () => choose(index));
         return item;
       });
-      menu.replaceChildren(...items);
+      menu.replaceChildren(heading, ...items);
     }
     function sync() {
       text.textContent = select.selectedOptions[0]?.label ?? "";
@@ -100,9 +127,10 @@ export function bindCustomSelects(root = document.body) {
         close();
         return;
       }
+      const index = enabled(highlighted) ? highlighted : select.selectedIndex;
       renderOptions();
-      highlight(enabled(highlighted) ? highlighted : select.selectedIndex);
       position();
+      highlight(index);
     }
     function close() {
       if (active !== control) return;
@@ -288,6 +316,8 @@ export function bindCustomSelects(root = document.body) {
     if (active && !active.select.checkVisibility()) active.close();
   }, { capture: true, signal });
   window.addEventListener("resize", () => active?.close(), { signal });
+  window.visualViewport?.addEventListener("resize", () => active?.close(), { signal });
+  window.visualViewport?.addEventListener("scroll", () => active?.position(), { signal });
   document.addEventListener("scroll", () => active?.position(), { capture: true, signal });
   return () => {
     listeners.abort();

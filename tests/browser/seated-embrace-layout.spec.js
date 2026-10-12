@@ -164,9 +164,8 @@ test("seated embrace calibration does not override explicit body, facing or unsu
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/?preset=builtin.named.lotus");
   await ready(page);
-  const hint = page.getByText("2 figures use guided starting placement.", {
-    exact: false,
-  });
+  const hint = page.getByRole("button", { name: "Information about Composition", exact: true });
+  await expect(hint).toHaveAttribute("data-hint", /2 figures use guided starting placement\./);
   await expect(hint).toBeVisible();
   await apply(page, "seated embrace, he is tall");
   await expect(hint).not.toBeVisible();

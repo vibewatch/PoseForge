@@ -34,9 +34,8 @@ for (const { title, phrase, contacts } of [
     ).toHaveAttribute("aria-pressed", "true");
     await expect(page.locator(".contact-result")).toHaveCount(contacts);
     await expect(page.locator(".contact-result.warning")).toHaveCount(0);
-    const hint = page.getByText("2 figures keep fixed placement.", {
-      exact: false,
-    });
+    const hint = page.getByRole("button", { name: "Information about Composition", exact: true });
+    await expect(hint).toHaveAttribute("data-hint", /2 figures keep fixed placement\./);
     await expect(hint).toBeVisible();
     await page.screenshot({ path: info.outputPath("calibrated-bed.png") });
     await apply(page, `${phrase} on the floor`);

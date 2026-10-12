@@ -226,6 +226,7 @@ export function buildStudio(
   function setFiltersOpen(open) {
     filters.hidden = !open;
     filterToggle.setAttribute("aria-expanded", String(open));
+    if (open) positionBrowser.open = false;
   }
   filters.onkeydown = (event) => {
     if (event.key !== "Escape") return;
@@ -240,40 +241,29 @@ export function buildStudio(
     "action small new-study",
   );
   newStudy.setAttribute("aria-label", t("+ New study"));
+  const libraryInformation = [
+    t("{records} source-linked 3D positions plus {presets} studio presets.", {
+      records: number(sourceManifest.records),
+      presets: library.index().filter((p) => p.status === "verified-3d").length,
+    }),
+    t("Positions and source records are one catalog. Browse broad categories, then choose a related named position. Every source-linked card opens a ready-to-view clothed 3D interaction; its details retain provenance plus the artistic and generated alternatives. These are approximate template-based interpretations, not measured reconstructions or physical certification."),
+    t("Saved in this browser using {storage}. Up to 5,000 presets / 32 MB. Export JSON for a portable backup; this is not cloud storage.", {
+      storage: t(library.mode ?? "local storage"),
+    }),
+    t("Tip: press / to search the library, Ctrl/⌘ Z to undo an edit and Ctrl/⌘ Shift Z or Ctrl Y to redo it. On desktop, the Library and Edit buttons in the top bar show or hide their panels so the 3D scene can use the whole window."),
+  ];
   const info = button(
     "ⓘ",
     () => {
       const modal = dialog(t("About the library"));
-      modal.append(
-        element("p", {
-          textContent: t("{records} source-linked 3D positions plus {presets} studio presets.", {
-            records: number(sourceManifest.records),
-            presets: library.index().filter((p) => p.status === "verified-3d").length,
-          }),
-        }),
-        element("p", {
-          textContent: t(
-            "Positions and source records are one catalog. Browse broad categories, then choose a related named position. Every source-linked card opens a ready-to-view clothed 3D interaction; its details retain provenance plus the artistic and generated alternatives. These are approximate template-based interpretations, not measured reconstructions or physical certification.",
-          ),
-        }),
-        element("p", {
-          textContent: t(
-            "Saved in this browser using {storage}. Up to 5,000 presets / 32 MB. Export JSON for a portable backup; this is not cloud storage.",
-            { storage: t(library.mode ?? "local storage") },
-          ),
-        }),
-        element("p", {
-          textContent: t(
-            "Tip: press / to search the library, Ctrl/⌘ Z to undo an edit and Ctrl/⌘ Shift Z or Ctrl Y to redo it. On desktop, the Library and Edit buttons in the top bar show or hide their panels so the 3D scene can use the whole window.",
-          ),
-        }),
-      );
+      modal.append(...libraryInformation.map((textContent) =>
+        element("p", { textContent })));
       modal.showModal();
     },
     "library-info icon-button",
   );
   info.setAttribute("aria-label", t("About this library"));
-  info.title = t("Catalog counts, storage and shortcuts");
+  info.title = libraryInformation.join("\n\n");
   const filterBar = element(
     "div",
     { className: "library-filter-bar", hidden: true },
@@ -292,10 +282,17 @@ export function buildStudio(
   const positionBrowser = element("details", {
     className: "position-browser",
   });
+  const categorySummary = element("summary", {
+    textContent: t("Browse position categories"),
+  });
+  categorySummary.addEventListener("click", () => setFiltersOpen(false));
   positionBrowser.append(
-    element("summary", { textContent: t("Browse position categories") }),
+    categorySummary,
     element("div", { className: "position-browser-body" }),
   );
+  positionBrowser.addEventListener("toggle", () => {
+    if (positionBrowser.open) setFiltersOpen(false);
+  });
   const top = element("div", { className: "library-top" }, [
     element("div", { className: "library-title" }, [
       element("h2", { textContent: t("Library") }),

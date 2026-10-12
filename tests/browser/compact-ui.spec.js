@@ -224,9 +224,9 @@ test("responsive transitions and short landscape screens keep editing, filters a
   await expect(page.locator("#stage")).toBeVisible();
   await page.locator('[data-region="edit"]').click();
   await expect(page.getByLabel("Pose description")).toBeVisible();
-  await page.getByText("Contact help", { exact: true }).click();
-  await expect(page.locator(".contact-help")).toHaveAttribute("open", "");
-  await page.getByText("Contact help", { exact: true }).click();
+  await page.getByRole("button", { name: "Information about Partner contacts", exact: true }).click();
+  await expect(page.getByRole("tooltip")).toContainText("Choose which parts should meet.");
+  await page.keyboard.press("Escape");
   await page.setViewportSize({ width: 844, height: 390 });
   await page.locator('[data-region="library"]').click();
   await positions(page);
