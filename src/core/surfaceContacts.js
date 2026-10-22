@@ -211,7 +211,8 @@ export function createSurfaceContactQuery(actors, templates) {
     if (!memo.has(b)) memo.set(b, closestMeshPoints(a, b, { crossingsOnly }));
     return memo.get(b);
   };
-  function tree(index, name, side, whole = null) {
+  // The figure as drawn for its current rig, skinned once per rig.
+  function posed(index) {
     const actor = actors[index],
       template = measured(templates[index]);
     if (!actor || !template) return null;
@@ -228,9 +229,17 @@ export function createSurfaceContactQuery(actors, templates) {
           actor.hang,
         ),
         trees: new Map(),
+        lowest: undefined,
       };
       cache.set(index, entry);
     }
+    return entry;
+  }
+  function tree(index, name, side, whole = null) {
+    const actor = actors[index],
+      template = measured(templates[index]);
+    const entry = posed(index);
+    if (!entry) return null;
     const figure = whole === true;
     const key = figure
       ? "$figure"
@@ -359,7 +368,33 @@ export function createSurfaceContactQuery(actors, templates) {
     );
   query.prop = (index, prop) =>
     measurePropSurface(tree(index, "", null, true), prop);
-  query.lowest = (index) => tree(index, "", null, true)?.min[1] ?? null;
+  // The whole figure's tree has this as its box's floor; when no query has
+  // built that tree yet, the same minimum is read off the drawn triangles
+  // rather than building one only to read its box.
+  query.lowest = (index) => {
+    const entry = posed(index);
+    if (!entry) return null;
+    const built = entry.trees.get("$figure");
+    if (built !== undefined) return built?.min[1] ?? null;
+    if (entry.lowest === undefined) {
+      let lowest = Infinity;
+      for (const part of entry.parts) {
+        const { positions, indices } = part;
+        for (let i = 0; i < indices.length; i++) {
+          const o = indices[i] * 3;
+          const x = positions[o], y = positions[o + 1], z = positions[o + 2];
+          if (!Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(z)) {
+            lowest = null;
+            break;
+          }
+          if (y < lowest) lowest = y;
+        }
+        if (lowest === null) break;
+      }
+      entry.lowest = lowest === Infinity ? null : lowest;
+    }
+    return entry.lowest;
+  };
   return query;
 }
 

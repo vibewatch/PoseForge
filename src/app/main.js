@@ -87,6 +87,11 @@ function draw() {
     view?.render();
   });
 }
+// Started before the renderer so its modules load while the GPU warms up.
+const worker = new Worker(
+  new URL("../workers/bodyWorker.js", import.meta.url),
+  { type: "module" },
+);
 try {
   view = createRenderer(canvas, { onChange: draw });
 } catch {
@@ -108,10 +113,6 @@ canvas.addEventListener("webglcontextrestored", () => {
   draw();
 });
 
-const worker = new Worker(
-  new URL("../workers/bodyWorker.js", import.meta.url),
-  { type: "module" },
-);
 let request = 0;
 let ready = false;
 let completedActors = null;

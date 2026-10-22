@@ -45,7 +45,7 @@ export function poseDiagram(preview) {
   });
   const commands = [];
   svg.append(
-    node("path", { d: "M13 114 H147", stroke: "#d6dfd7", "stroke-width": 1 }),
+    node("path", { d: "M13 114 H147", stroke: "#3c3d45", "stroke-width": 1 }),
   );
   for (const segments of layout.props)
     for (const [a, b] of segments)
@@ -56,12 +56,13 @@ export function poseDiagram(preview) {
           y1: a[1],
           x2: b[0],
           y2: b[1],
-          stroke: "#9aa99b",
+          stroke: "#7d808c",
           "stroke-width": 1.2,
           opacity: 0.7,
         }),
       });
-  const palette = ["#527c70", "#b17b61", "#647b9f", "#937294"];
+  // Bright enough to read on the dark library thumbnails.
+  const palette = ["#6fd0b4", "#ff9a68", "#8fb3ff", "#d79fe0"];
   layout.actors.forEach((actor, index) => {
     const color = palette[index % palette.length];
     for (const [from, to, weight] of PREVIEW_SEGMENTS) {

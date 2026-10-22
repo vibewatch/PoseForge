@@ -160,7 +160,11 @@ setting and material controls above the camera toolbar; Escape or clicking
 outside closes it. Smaller screens keep **Library / Studio / Edit** one tap
 away, with a 44-pixel bottom navigation bar.
 
-The workspace uses a borderless, neutral surface hierarchy, 4/8/12-pixel spacing
+The workspace uses a dark **graphite + ember** studio theme: layered graphite
+surfaces separated by hairline shadows (so panel geometry never shifts), one
+ember-orange accent for selection and primary actions, uppercase letter-spaced
+section labels and monospaced numerals for values. Forced-colors mode maps every
+token to system colours. It keeps a borderless surface hierarchy, 4/8/12-pixel spacing
 and bundled **Manrope** typography with system Chinese sans-serif fallbacks:
 11-pixel captions, 12-pixel controls and compact inspector headings,
 13-pixel body text, 14-pixel section/scene headings and 18-pixel branding, with
@@ -168,13 +172,13 @@ and bundled **Manrope** typography with system Chinese sans-serif fallbacks:
 40-pixel height.
 The camera dock, mobile navigation and panel actions use consistent line icons
 with their original accessible names. Library collection/category navigation and
-Scene/Figures switching share a quiet segmented surface with a dark selected
-tile and white icon. Search, field labels, content names and quality warnings
+Scene/Figures switching share a quiet segmented surface with an ember-tinted
+selected tile. Search, field labels, content names and quality warnings
 remain text; actions use icons instead of competing with that content.
 Description examples and Apply share one action row; figure capture/add actions
 sit above the figures and removal sits beside each figure heading.
-The side panels use a shared Studio component style: pale violet-gray backing,
-white editing sections with icon headings, an integrated description composer,
+The side panels use a shared Studio component style: graphite backing,
+raised editing sections with icon headings, an integrated description composer,
 accented disclosure headers, level sliders with numeric badges and compact
 checkbox switches. Body type and posture share one row. These controls keep
 their native labels, values and keyboard behavior; the panels themselves and

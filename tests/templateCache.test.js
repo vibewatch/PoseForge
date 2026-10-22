@@ -239,3 +239,24 @@ test("normalized cache defaults preserve real dressed geometry for every body ty
     );
   }
 });
+
+test("a stored template is reused without shaping, and only complete ones are stored", async () => {
+  const stored = new Map();
+  const store = {
+    get: async (key) => stored.get(key) ?? null,
+    set: (key, value) => stored.set(key, value),
+  };
+  let ready = false;
+  const first = mockCache({ store, complete: () => ready });
+  await first.get({ bodyType: "female", wearing: ["top"] });
+  assert.equal(stored.size, 0, "an incomplete scan's template is not kept");
+  ready = true;
+  const second = mockCache({ store, complete: () => ready });
+  const made = await second.get({ bodyType: "female", wearing: ["top"] });
+  assert.equal(stored.size, 1);
+  const third = mockCache({ store, complete: () => ready });
+  const kept = await third.get({ bodyType: "female", wearing: ["top"] });
+  assert.equal(kept, made);
+  assert.equal(third.calls.bodies.length, 0);
+  assert.equal(third.calls.templates.length, 0);
+});

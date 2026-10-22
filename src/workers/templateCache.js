@@ -21,6 +21,8 @@ export function createTemplateCache(
     dress = withGarments,
     addHair = withHair,
     express = withExpression,
+    store = null,
+    complete = () => true,
   } = {},
 ) {
   for (const value of [bodyCapacity, templateCapacity])
@@ -54,26 +56,41 @@ export function createTemplateCache(
       hair = spec.hair,
       expression = humanExpression(spec);
     const bodyKey = humanBodyKey(body);
-    if (!bodies.has(bodyKey))
-      remember(
-        bodies,
-        bodyCapacity,
-        bodyKey,
-        Promise.resolve()
-          .then(() => scanned(body.bodyType, body.model))
-          .then((scan) => (scan ? relieve(scan, body) : null)),
-      );
-    const template = bodies.get(bodyKey).then((shaped) => {
-      if (!shaped) return null;
-      const clothed = dress(shaped, {
-        bodyType: body.bodyType,
-        wearing,
-        colour: outfit,
+    const shape = () => {
+      if (!bodies.has(bodyKey))
+        remember(
+          bodies,
+          bodyCapacity,
+          bodyKey,
+          Promise.resolve()
+            .then(() => scanned(body.bodyType, body.model))
+            .then((scan) => (scan ? relieve(scan, body) : null)),
+        );
+      const template = bodies.get(bodyKey).then((shaped) => {
+        if (!shaped) return null;
+        const clothed = dress(shaped, {
+          bodyType: body.bodyType,
+          wearing,
+          colour: outfit,
+        });
+        // The face last, on everything it moves: the skin, and the brows and
+        // lashes the hair put on it.
+        return express(addHair(clothed, { bodyType: body.bodyType, style: hair }), expression);
       });
-      // The face last, on everything it moves: the skin, and the brows and
-      // lashes the hair put on it.
-      return express(addHair(clothed, { bodyType: body.bodyType, style: hair }), expression);
-    });
+      return template;
+    };
+    // A template kept from an earlier visit is the same template (see
+    // `templateStore.js`); one shaped now is kept for the next, unless its scan
+    // came without its hair or its face.
+    const template = store
+      ? store.get(key).then((kept) => {
+          if (kept) return kept;
+          return shape().then((shaped) => {
+            if (shaped && complete(body)) store.set(key, shaped);
+            return shaped;
+          });
+        })
+      : shape();
     return remember(templates, templateCapacity, key, template);
   };
 }

@@ -31,6 +31,7 @@ import { inMouth } from "../core/faces.js";
 import { dressFigures } from "../core/dressCodes.js";
 import { createTemplateCache } from "./templateCache.js";
 import { createTemplatePool } from "./templatePool.js";
+import { createTemplateStore } from "./templateStore.js";
 import { modelUrl, modelWarnings, scanned } from "./scans.js";
 import { buildBodyMesh } from "../render/meshBuilder.js";
 import { occludeParts } from "./occlusionPool.js";
@@ -57,7 +58,12 @@ const FINAL = 0.012;
  * the first (see `templatePool.js`), and what the helper's scan loader said
  * about it is carried into the warnings as this worker's own would be.
  */
-const humanTemplate = createTemplatePool(createTemplateCache(scanned), {
+const humanTemplate = createTemplatePool(
+  createTemplateCache(scanned, {
+    store: createTemplateStore(),
+    complete: ({ bodyType, model }) => !modelWarnings.has(modelUrl(bodyType, model)),
+  }),
+  {
   warned: ({ bodyType, model }, warnings) => {
     const url = modelUrl(bodyType, model);
     if (warnings) modelWarnings.set(url, warnings);

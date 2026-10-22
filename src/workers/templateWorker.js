@@ -1,8 +1,12 @@
 /** One helper of `templatePool.js`: shapes and dresses the bodies it is sent. */
 import { createTemplateCache } from "./templateCache.js";
 import { modelUrl, modelWarnings, scanned } from "./scans.js";
+import { createTemplateStore } from "./templateStore.js";
 
-const humanTemplate = createTemplateCache(scanned);
+const humanTemplate = createTemplateCache(scanned, {
+  store: createTemplateStore(),
+  complete: ({ bodyType, model }) => !modelWarnings.has(modelUrl(bodyType, model)),
+});
 
 self.onmessage = async ({ data: { id, spec } }) => {
   try {

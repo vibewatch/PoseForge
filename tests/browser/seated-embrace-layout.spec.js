@@ -121,7 +121,9 @@ test("seated embrace keeps five contacts on floor and bed through save, reload, 
   expect(guided.contacts).toHaveLength(2);
   expect(guided.relationship.arrangement).toBe("straddle_lap");
   guided.actors.forEach((actor, i) => {
-    const expected = structuredClone(SEATED_EMBRACE_LAYOUT.actors[i]);
+    const expected = structuredClone(
+      SEATED_EMBRACE_LAYOUT.surfaceVariants.bed.actors[i],
+    );
     expected.placement.position[1] += 0.55;
     expect(actor).toMatchObject(expected);
   });

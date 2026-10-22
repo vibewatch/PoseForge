@@ -208,49 +208,41 @@ function branch(triangles) {
   });
   const order = Int32Array.from(triangles.keys()),
     key = new Float64Array(n);
-  const spare = new Int32Array(n),
-    spareKey = new Float64Array(n);
 
-  // A stable merge sort of one node's range along one axis. It is the order
-  // `Array.sort` on the centres gave, ties and all, so the tree is the same
-  // tree; it is only that it is sorted on flat arrays, without a comparator
-  // called into for every pair.
-  function sortRange(lo, hi, axis) {
+  // Split one node's range at its median along one axis: everything before
+  // `mid` has a centre no further along than everything from `mid` on. Only
+  // which side each triangle lands on matters to the tree, not the order
+  // within a side - each side is split again on its own axis - so a selection
+  // (expected linear) does what a full sort per node did in n log n.
+  function selectMedian(lo, hi, mid, axis) {
     for (let f = lo; f < hi; f++) key[f] = centres[order[f] * 3 + axis];
-    const RUN = 16;
-    for (let s = lo; s < hi; s += RUN) {
-      const e = Math.min(s + RUN, hi);
-      for (let i = s + 1; i < e; i++) {
-        const k = key[i],
-          o = order[i];
-        let j = i - 1;
-        for (; j >= s && key[j] > k; j--) {
-          key[j + 1] = key[j];
-          order[j + 1] = order[j];
+    let left = lo,
+      right = hi - 1;
+    while (right > left) {
+      // Median of three as the pivot, so sorted runs stay linear.
+      const m = (left + right) >> 1;
+      const a = key[left], b = key[m], c = key[right];
+      const pivot = a < b ? (b < c ? b : a < c ? c : a) : a < c ? a : b < c ? c : b;
+      let i = left,
+        j = right;
+      while (i <= j) {
+        while (key[i] < pivot) i++;
+        while (key[j] > pivot) j--;
+        if (i <= j) {
+          const k = key[i];
+          key[i] = key[j];
+          key[j] = k;
+          const o = order[i];
+          order[i] = order[j];
+          order[j] = o;
+          i++;
+          j--;
         }
-        key[j + 1] = k;
-        order[j + 1] = o;
       }
+      if (mid <= j) right = j;
+      else if (mid >= i) left = i;
+      else break;
     }
-    let [from, fromKey, to, toKey] = [order, key, spare, spareKey];
-    for (let width = RUN; width < hi - lo; width *= 2) {
-      for (let s = lo; s < hi; s += 2 * width) {
-        const m = Math.min(s + width, hi),
-          e = Math.min(s + 2 * width, hi);
-        let i = s,
-          j = m,
-          d = s;
-        while (i < m && j < e) {
-          const next = fromKey[j] < fromKey[i] ? j++ : i++;
-          toKey[d] = fromKey[next];
-          to[d++] = from[next];
-        }
-        for (; i < m; i++, d++) (toKey[d] = fromKey[i]), (to[d] = from[i]);
-        for (; j < e; j++, d++) (toKey[d] = fromKey[j]), (to[d] = from[j]);
-      }
-      [from, fromKey, to, toKey] = [to, toKey, from, fromKey];
-    }
-    if (from !== order) order.set(from.subarray(lo, hi), lo);
   }
 
   function node(lo, hi) {
@@ -271,8 +263,8 @@ function branch(triangles) {
     }
     const extents = max.map((value, k) => value - min[k]);
     const axis = extents.indexOf(Math.max(...extents));
-    sortRange(lo, hi, axis);
     const mid = lo + Math.floor(count / 2);
+    selectMedian(lo, hi, mid, axis);
     return { min, max, count, left: node(lo, mid), right: node(mid, hi) };
   }
   return node(0, n);

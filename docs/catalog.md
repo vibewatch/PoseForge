@@ -169,6 +169,8 @@ resolved.
 
 **Chair straddle** uses a calibrated clothed starting pose for chair and bench,
 with a side camera view and all three original pelvis/hand contacts retained.
+The seated figure's arms are fitted so his open hands rest at her waist rather
+than hovering beside her; this is a pose refinement, not an added contact.
 The two surfaces have independently fitted actor poses: seat heights differ
 while the supporting feet stay on the floor. Built-in recipes can declare
 `surfaceVariants` with their own actors and reference height; saved/exported
@@ -203,8 +205,11 @@ missing models do not certify clearance.
 
 **Lotus**, also available as `seated embrace`, uses a calibrated clothed floor
 layout with all five original contacts: lap support, both hands on shoulders,
-and both hands on the upper back. Seat and foot supports share one plane, so
-the verified bed version uses the same scene translated to the mattress top.
+and both hands on the upper back. On the floor the primary sits upright with
+legs extended while the partner kneels astride his thighs, her hands on his
+shoulders and his palms on her upper back. The bed has its own fitted
+`surfaceVariants.bed` (a reclined seat) because heels resting on a mattress
+read as stepping off its edge; it is translated to the mattress top.
 Both use guided placement and joint hints with a side camera view. The primary
 has measured surface support; the partner retains its explicit partner-support
 assignment rather than a fabricated floor residual. The same explicit-edit,

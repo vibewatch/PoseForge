@@ -122,14 +122,14 @@ test("category names align left and expanded position tags have visible interact
       await expect(tag).toBeVisible();
       await expect(tag).toHaveCSS("border-top-width", "1px");
       await expect(tag).toHaveCSS("border-top-style", "solid");
-      await expect(tag).toHaveCSS("background-color", "rgb(255, 255, 255)");
+      await expect(tag).toHaveCSS("background-color", "rgb(29, 30, 35)");
       const bounds = await tag.boundingBox();
       const panel = await browser.locator(".position-browser-body").boundingBox();
       expect(bounds.x).toBeGreaterThanOrEqual(panel.x);
       expect(bounds.x + bounds.width).toBeLessThanOrEqual(panel.x + panel.width);
       await tag.hover();
-      await expect(tag).toHaveCSS("border-top-color", "rgb(98, 87, 217)");
-      await expect(tag).toHaveCSS("background-color", "rgb(239, 237, 255)");
+      await expect(tag).toHaveCSS("border-top-color", "rgb(255, 122, 61)");
+      await expect(tag).toHaveCSS("background-color", "rgb(58, 37, 25)");
       await category.locator("summary").hover();
     }
     await audit(page);
@@ -141,7 +141,7 @@ test("category names align left and expanded position tags have visible interact
     await page.keyboard.press("Tab");
     await page.keyboard.press("Shift+Tab");
     await expect(tag).toBeFocused();
-    await expect(tag).toHaveCSS("border-top-color", "rgb(98, 87, 217)");
+    await expect(tag).toHaveCSS("border-top-color", "rgb(255, 122, 61)");
     await page.keyboard.press("Enter");
     await expect(browser).not.toHaveAttribute("open", "");
     await expect(page.getByLabel("Search positions", { exact: true })).toHaveValue(query);
