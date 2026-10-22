@@ -51,6 +51,9 @@ const smoothstep = (a, b, t) => {
  */
 const LIFT = 0.0025 / 1.72;
 
+/** How far below the waist the studio top's hem falls, over the shorts' waistband. */
+const TOP_HEM = 0.035;
+
 // Joints carry two names. `joint.name` is the rig's own - upperarm_l, calf_l,
 // ball_l - and `joint.bone` is this project's remapping of the twenty-two it
 // poses, shoulder_l, knee_l, toe_l. `jointSet` matches on `name`, so these
@@ -2175,11 +2178,20 @@ function studioGarment(template, body, marks, colour, name, bodyType) {
     const waist = (y) => marks.waistY - 0.012 - y;
     const legs = (y) => y - (marks.crotchY - 0.11);
     const field = (x, y) => Math.min(waist(y), legs(y));
+    // The top's hem comes down over the waistband (see `TOP_HEM`). Both are
+    // lifted the same distance, so where they overlap the two surfaces are
+    // coplanar and fight for the pixel, drawing a ragged dark line round the
+    // waist. Under the top the shorts are sunk a little, so the top lies
+    // over them; below its hem they are back at full lift, so nothing that
+    // can be seen or touched has moved.
+    const hem = marks.waistY - TOP_HEM;
+    const tuck = (x, y) => -LIFT * 0.4 * smoothstep(hem, hem + 0.004, y);
     // A waistband three centimetres deep and a hem at each leg, which the
     // renderer draws ribbed and sewn on - a pair of shorts all one surface to
     // the edge is a pair painted on.
     return lift(body, field, boneMargin(template, body, ARM_BONES), colour, name, {
       trim: (x, y) => bands([0.018 - waist(y), 0.012 - legs(y)]),
+      bulge: tuck,
     });
   }
   // The neckline and the sleeves are cut on the skeleton's geometry rather than
@@ -2224,7 +2236,7 @@ function studioGarment(template, body, marks, colour, name, bodyType) {
   };
   const field = (x, y, z) =>
     Math.min(
-      y - (marks.waistY - 0.035),
+      y - (marks.waistY - TOP_HEM),
       neckY + 0.012 - y,
       collar(x, y, z),
       sleeve(x, y, z),
@@ -2244,7 +2256,7 @@ function studioGarment(template, body, marks, colour, name, bodyType) {
     bands([
       0.009 - Math.min(collar(x, y, z), neckY + 0.012 - y),
       0.012 - sleeve(x, y, z),
-      0.012 - (y - (marks.waistY - 0.035)),
+      0.012 - (y - (marks.waistY - TOP_HEM)),
     ]);
   return lift(body, field, veto, colour, name, {
     trim,
