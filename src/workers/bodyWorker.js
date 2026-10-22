@@ -125,6 +125,7 @@ function bodyParts(actor, template, resolution) {
     trimColour: part.trimColour ?? null,
     positions: part.positions,
     normals: part.normals,
+    tangents: part.tangents ?? null,
     uvs: part.uvs ?? null,
     indices: part.indices.slice(),
     // A part that brought its own occlusion keeps it - only the eyes and the
@@ -208,6 +209,7 @@ async function meshActors(actors, { occlusion, resolution }, transfers, loaded, 
     for (const part of parts) {
       transfers.push(part.positions.buffer, part.normals.buffer, part.indices.buffer);
       if (part.occlusion) transfers.push(part.occlusion.buffer);
+      if (part.tangents) transfers.push(part.tangents.buffer);
       // Not transferred: the UVs are the template's own array, shared by every
       // actor on that body type and by every frame. Neutering it would leave
       // the next render with an empty buffer and an untextured figure.

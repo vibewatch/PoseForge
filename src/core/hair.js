@@ -324,8 +324,14 @@ export const DEFAULT_HAIR = { female: "crop", male: "short", neutral: "short" };
  * read as black next to skin - it is a fifteenth of the skin's albedo, so the
  * eye has no trouble - and light enough that the diffuse shading still models
  * the crown rather than leaving a silhouette with a glint on it.
+ *
+ * Lifted from 0.075/0.062/0.056 once the viewport's highlight learned to run
+ * across the strands: at that tone the cards' painted strands vanished into
+ * the black and the head was all reflection, which reads as moulded plastic.
+ * This is still black beside skin, with a warm cast, and the strand shading in
+ * the cards now shows through it.
  */
-export const HAIR_COLOUR = [0.075, 0.062, 0.056];
+export const HAIR_COLOUR = [0.118, 0.09, 0.074];
 
 const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
 const smoothstep = (a, b, t) => {

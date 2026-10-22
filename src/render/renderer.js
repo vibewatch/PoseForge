@@ -587,7 +587,7 @@ function cardTexture(name) {
  * as in front; the cards are wound to face out of the head (see `cardSubmesh`),
  * so the side three turns the normal round for is the inside.
  */
-function cardMaterial(colour, cards, strands = cardTexture(cards.texture)) {
+function cardMaterial(colour, cards, { strands = cardTexture(cards.texture), flow = false } = {}) {
   const material = hairMaterial(colour);
   // The strands themselves, from the grey of the picture of them: a card is
   // a flat sheet and its highlight was one smooth band down it - the room's
@@ -600,12 +600,29 @@ function cardMaterial(colour, cards, strands = cardTexture(cards.texture)) {
   // strands themselves; and the lobe's direction comes from the cards' UVs,
   // which where a trim folds under - the inside of a bob's fringe, beside the
   // cheek - are sheared to nothing, and it came out a ribbon of chrome there.
+  // Stretched across the strands, from the direction the geometry carries
+  // (`acrossStrands` in humanMesh.js) rather than from the cards' UVs, which
+  // where a trim folds under - the inside of a bob's fringe, beside the cheek -
+  // are sheared to nothing and drew a ribbon of chrome there. A fibre is a
+  // cylinder and reflects a light into a band round it, so the glints line up
+  // across the head the way they do on hair; a round lobe over a dark, bumpy
+  // sheet is what reads as plastic. Without the direction, isotropic.
   material.anisotropy = 0;
   material.bumpMap = strands;
-  material.bumpScale = 1.2;
+  // The bump breaks the band into lock-by-lock glints; at 1.2 under an
+  // isotropic lobe it also crinkled every card like foil.
+  material.bumpScale = 0.5;
   material.roughness = 0.55;
   material.envMapIntensity = 0.4;
   material.specularIntensity = 0.55;
+  if (flow) {
+    material.anisotropy = 0.85;
+    material.roughness = 0.4;
+    material.specularIntensity = 0.7;
+    // The light that goes into a fibre and back out has been coloured by it:
+    // hair's own highlight is warm, not the white of a varnish.
+    material.specularColor.setRGB(1, 0.86, 0.72);
+  }
   // And the sheen goes. On the shell it stood in for the fibres the surface
   // did not have; the cards have them, painted, and the sheen's grazing lobe -
   // untouched by the texture's dark, and by the occlusion - frosted every
@@ -1047,6 +1064,8 @@ function toGeometry(mesh) {
   // The scan brings its own; the field does not, and a body drawn from the
   // field is drawn untextured rather than drawn with somebody else's chart.
   if (mesh.uvs) geometry.setAttribute("uv", new BufferAttribute(mesh.uvs, 2));
+  // Hair says which way its strands run, for the highlight (see `cardMaterial`).
+  if (mesh.tangents) geometry.setAttribute("tangent", new BufferAttribute(mesh.tangents, 4));
   // The sphere `computeBoundingSphere` would make - centred on the box, out
   // to the farthest point - from the box already read.
   const p = mesh.positions;
@@ -1587,6 +1606,13 @@ export function createRenderer(canvas, { alpha = false, shadows = true, onChange
         uvs: new Float32Array(6),
         garment: true,
       });
+      const flowing = toGeometry({
+        positions: new Float32Array([0, 0, 0, 1, 0, 0, 0, 1, 0]),
+        normals: new Float32Array([0, 0, 1, 0, 0, 1, 0, 0, 1]),
+        tangents: new Float32Array([1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1]),
+        indices: new Uint32Array([0, 1, 2]),
+        uvs: new Float32Array(6),
+      });
       const blank = new Texture();
       const add = (material) => () => group.add(new Mesh(geometry, material()));
       // Each once the tiles it is made of have come, asked for now, after the room's.
@@ -1596,7 +1622,8 @@ export function createRenderer(canvas, { alpha = false, shadows = true, onChange
         after([SKIN_TILE], add(() => skinMaterial(tinted(SKIN[0]), blank))),
         after([EYE_TILE], add(() => eyeMaterial(null, true))),
         add(() => mouthMaterial([1, 1, 1])),
-        add(() => cardMaterial([0, 0, 0], { gain: 1 }, blank)),
+        add(() => cardMaterial([0, 0, 0], { gain: 1 }, { strands: blank })),
+        () => group.add(new Mesh(flowing, cardMaterial([0, 0, 0], { gain: 1 }, { strands: blank, flow: true }))),
         after(weaveTiles("cotton"), add(() => garmentMaterial({ finish: "cotton", colour: [0, 0, 0], uvs: true }))),
         // The creases and the rib every garment's shader is given as it compiles.
         after([["rib"]], ribTexture),
@@ -1733,7 +1760,7 @@ export function createRenderer(canvas, { alpha = false, shadows = true, onChange
           ? skinMaterial(atlas ? tinted(tone) : tone, atlas)
           : part.hair
             ? part.cards && part.uvs
-              ? cardMaterial(part.colour, part.cards)
+              ? cardMaterial(part.colour, part.cards, { flow: !!part.tangents })
               : hairMaterial(part.colour)
             : part.garment
               ? garmentMaterial(part)

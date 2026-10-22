@@ -1118,6 +1118,8 @@ export function skinHumanMesh(template, skeleton, evaluated, align = bindCorrect
     const positions = new Float32Array(count * 3);
     const normals = new Float32Array(count * 3);
     const swing = hang && submesh.hang ? hang : null;
+    const across = submesh.hair ? acrossStrands(submesh) : null;
+    const tangents = across ? new Float32Array(count * 4) : null;
     for (let v = 0; v < count; v += 1) {
       const px = submesh.positions[v * 3];
       const py = submesh.positions[v * 3 + 1];
@@ -1155,6 +1157,26 @@ export function skinHumanMesh(template, skeleton, evaluated, align = bindCorrect
       normals[v * 3] = mx / length;
       normals[v * 3 + 1] = my / length;
       normals[v * 3 + 2] = mz / length;
+      if (tangents) {
+        // Hair is rigid to the head, so the strands turn as the normals do.
+        const ax = across[v * 3];
+        const ay = across[v * 3 + 1];
+        const az = across[v * 3 + 2];
+        let tx = ax, ty = ay, tz = az;
+        if (total > 0) {
+          tx = ty = tz = 0;
+          for (let k = 0; k < 4; k += 1) {
+            const weight = submesh.weights[v * 4 + k];
+            const m = weight > 0 ? skinning[submesh.joints[v * 4 + k]] : null;
+            if (!m) continue;
+            tx += weight * (m[0] * ax + m[4] * ay + m[8] * az);
+            ty += weight * (m[1] * ax + m[5] * ay + m[9] * az);
+            tz += weight * (m[2] * ax + m[6] * ay + m[10] * az);
+          }
+        }
+        const size = Math.hypot(tx, ty, tz) || 1;
+        tangents.set([tx / size, ty / size, tz / size, 1], v * 4);
+      }
       // Gravity, after the skin and in metres, because the pivot is a world
       // point and the two have to be in the same units to subtract.
       if (swing) {
@@ -1164,8 +1186,65 @@ export function skinHumanMesh(template, skeleton, evaluated, align = bindCorrect
         normals.set(n, v * 3);
       }
     }
-    return { name: submesh.name, primary: submesh.primary, colour: submesh.colour, hair: submesh.hair ?? false, eye: submesh.eye ?? false, mouth: submesh.mouth ?? false, garment: submesh.garment ?? false, finish: submesh.finish ?? null, trim: submesh.trim ?? null, trimColour: submesh.trimColour ?? null, cards: submesh.cards ?? null, positions, normals, uvs: submesh.uvs, occlusion: submesh.occlusion ?? null, cavity: submesh.cavity ?? null, indices: submesh.indices };
+    return { name: submesh.name, primary: submesh.primary, colour: submesh.colour, hair: submesh.hair ?? false, eye: submesh.eye ?? false, mouth: submesh.mouth ?? false, garment: submesh.garment ?? false, finish: submesh.finish ?? null, trim: submesh.trim ?? null, trimColour: submesh.trimColour ?? null, cards: submesh.cards ?? null, positions, normals, tangents, uvs: submesh.uvs, occlusion: submesh.occlusion ?? null, cavity: submesh.cavity ?? null, indices: submesh.indices };
   });
+}
+
+/**
+ * The direction across the strands at each vertex of a hair submesh, in bind
+ * space: what the renderer stretches hair's highlight along.
+ *
+ * Hair's highlight is not a spot. Each fibre is a cylinder, and a cylinder
+ * reflects a light into a line running round it, so a head of hair shows a
+ * band across the strands - and a round, isotropic highlight on dark cards is
+ * what reads as plastic. Neither the cards nor the shell say which way their
+ * strands run, and the cards' UVs are sheared to nothing where a trim folds
+ * under, so the direction is taken from the one thing every style shares:
+ * hair grows out from the crown and falls away from it. A strand is the
+ * direction away from the crown laid into the surface, and the band runs
+ * square to that.
+ *
+ * Cached per submesh, since the template's arrays are the same every frame.
+ */
+const strandCache = new WeakMap();
+function acrossStrands(submesh) {
+  if (strandCache.has(submesh)) return strandCache.get(submesh);
+  const p = submesh.positions;
+  const n = submesh.normals;
+  const count = p.length / 3;
+  let top = -Infinity;
+  for (let v = 0; v < count; v += 1) top = Math.max(top, p[v * 3 + 1]);
+  // The crown: the middle of the top of the hair, a little below and behind
+  // its highest point, which is where the whorl sits.
+  let cx = 0, cz = 0, crown = 0;
+  for (let v = 0; v < count; v += 1) {
+    if (p[v * 3 + 1] < top - 0.04) continue;
+    cx += p[v * 3];
+    cz += p[v * 3 + 2];
+    crown += 1;
+  }
+  const c = [cx / (crown || 1), top - 0.02, cz / (crown || 1) - 0.012];
+  const out = new Float32Array(count * 3);
+  for (let v = 0; v < count; v += 1) {
+    const i = v * 3;
+    const nn = [n[i], n[i + 1], n[i + 2]];
+    let s = [p[i] - c[0], p[i + 1] - c[1], p[i + 2] - c[2]];
+    let d = s[0] * nn[0] + s[1] * nn[1] + s[2] * nn[2];
+    s = [s[0] - d * nn[0], s[1] - d * nn[1], s[2] - d * nn[2]];
+    if (Math.hypot(s[0], s[1], s[2]) < 1e-5) {
+      // At the crown itself, or a card facing straight at it: let it fall.
+      d = -nn[1];
+      s = [-d * nn[0], -1 - d * nn[1], -d * nn[2]];
+    }
+    // Across = normal x strand.
+    const a = [nn[1] * s[2] - nn[2] * s[1], nn[2] * s[0] - nn[0] * s[2], nn[0] * s[1] - nn[1] * s[0]];
+    const size = Math.hypot(a[0], a[1], a[2]) || 1;
+    out[i] = a[0] / size;
+    out[i + 1] = a[1] / size;
+    out[i + 2] = a[2] / size;
+  }
+  strandCache.set(submesh, out);
+  return out;
 }
 
 /**
